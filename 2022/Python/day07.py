@@ -53,6 +53,7 @@ def part1(filepath):
     for _, size in directories.items():
         if size < cutoff:
             sum_small_dir += size
+            
     print("Part 1:")
     print(f"The total size of the small directories is : {sum_small_dir}.")
 
