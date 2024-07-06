@@ -2,6 +2,8 @@ filepath="..\\data\\input09.txt"
 test09 = "..\\test\\test09.txt"
 test09_2 = "..\\test\\test09_2.txt"
 
+Coord = tuple[int, int]
+
 
 def read_input(filepath):
     
@@ -22,7 +24,27 @@ def get_directions(lines):
     directions = [seperation(i) for i in lines]
     return directions
 
-def update_position(head: tuple, tail: tuple, direction: tuple) -> tuple:
+def touching(head: Coord, tail: Coord)-> bool:
+    '''
+    Checks if the head and tail are touching and returns a boolean
+    >>> touching((0,0), (0,0))
+    True
+    >>> touching((0,0), (0,1))
+    True
+    >>> touching((1,0), (0,0))
+    True
+    >>> touching((1,1), (0,0))
+    True
+    >>> touching((2,0), (0,0))
+    False
+    '''
+
+    x_head, y_head = head
+    x_tail, y_tail = tail
+
+    return abs(x_head-x_tail)<=1 and abs(y_head-y_tail)<=1
+
+def update_position(head: Coord, tail: Coord, direction: tuple[str, int]) -> tuple[Coord, Coord]:
     '''
     Updates the position of the head and tail according to the direction and returns the new positions of the head and tail respectively.
 
@@ -50,19 +72,19 @@ def update_position(head: tuple, tail: tuple, direction: tuple) -> tuple:
         case "D":
             dx, dy = 0, -1
     
-    # read out the old positions of the head and tail
     x_head, y_head = head
-    x_tail, y_tail = tail
-
-    # set the new head position and check if we need to update the tail
     new_head = (x_head+dx, y_head+dy)
-    new_tail = tail
-    if ((x_head+dx-x_tail)**2+(y_head+dy-y_tail)**2)>2:
+
+    if touching(new_head, tail):
+        new_tail = tail
+    else:
         new_tail = head
-    
+
     return new_head, new_tail
 
-def update_position_longer(snake, direction):
+
+
+def update_position_longer(snake: list[Coord], direction: (str, int)) -> list[Coord]: 
     match direction:
         case "R":
             dx, dy = 1, 0
@@ -72,27 +94,53 @@ def update_position_longer(snake, direction):
             dx, dy = 0, 1
         case "D":
             dx, dy = 0, -1
-    
-    
+        
     # Move the head to the position
     new_snake = []
     x_head, y_head = snake[0]
     new_head = (x_head+dx, y_head+dy)
     new_snake.append(new_head)
-    
+   
     # now compare the new positions and update the positions of the snake
     for i in range(1, 10):
         head = new_snake[-1]
         tail = snake[i]
-
+        
+        # check if they're touching if so break the loop
+        if touching(head, tail):
+            new_snake += snake[i:]
+            break
+        
+        # read out the x and y components
+        dx, dx = 0,0
         x_head, y_head = head
         x_tail, y_tail = tail
 
-        new_tail = tail
-        if ((x_head+dx-x_tail)**2+(y_head+dy-y_tail)**2)>2:
-            new_tail = head
+        if x_head!=x_tail and y_head != y_tail:
+            if x_head>x_tail:
+                dx = 1
+            else:
+                dx = -1
+            if y_head>y_tail:
+                dy = 1
+            else:
+                dy = -1
+            
+        else:
+            if x_head==x_tail:
+                if y_head>y_tail:
+                    dy = 0, 1
+                else:
+                    dy = 0, -1
+            elif y_head==y_tail:
+                if x_head>x_tail:
+                    dx = 1
+                else:
+                    dx = -1
+        
+        new_tail = (x_tail+dx, y_tail+dy)
         new_snake.append(new_tail)
-    
+        
     return new_snake
 
 def part1(filepath):
@@ -116,6 +164,7 @@ def part1(filepath):
         for i in range(n):
             head, tail = update_position(head, tail, d)
             visited.add(tail)
+        
 
     print("Part 1:")
     print(f"The tail has visited {len(visited)} positions.")
@@ -133,7 +182,7 @@ def part2(filepath):
     lines = read_input(filepath)
     directions = get_directions(lines)
     
-    # the head and tail start at (0,0)
+    # the entire snake starts at (0,0)
     snake = [(0,0) for _ in range(10)]
     
     visited = set()
@@ -143,9 +192,10 @@ def part2(filepath):
         for i in range(n):
             snake = update_position_longer(snake, d)
             visited.add(snake[-1])
-            print(snake)
+       
+
     print("Part 2:")
     print(f"The tail has visited {len(visited)} positions.")
     
 part1(filepath)
-part2(test09_2)
+part2(filepath)
