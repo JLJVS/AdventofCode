@@ -1,3 +1,3 @@
-for i in range(N_stacks-1):
-        #     if line[1+4*i] != " ":
-        #         stacks[i].append(line[1+4*i])
+register_values = calculate_all_register_vals(clean_input(read_input(test10_2)))
+# for register, cycle in register_values[:50]:
+#      print(draw_pixel(register, cycle))

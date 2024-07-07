@@ -42,6 +42,23 @@ def execute_operation(register: int, cycle: int, operation: list) -> (int, int):
     n = operation[1]
     return register+n, cycle+2
 
+def calculate_all_register_vals(operations: list) -> list[list[int, int]]:
+    '''
+    Calculates all the register values for specific cycles and returns the list with all values.
+    ''' 
+    register, cycle = 1, 1
+    register_values = [[register, cycle]]
+
+    for operation in operations:
+        new_register, new_cycle = execute_operation(register, cycle, operation)
+        
+        if new_cycle-cycle>1:
+            register_values.append([register, cycle+1])
+        
+        register, cycle = new_register, new_cycle
+        register_values.append([register, cycle])
+    
+    return register_values
 
 def calculate_signal_strength(register: int, cycle: int) -> int:
     '''
@@ -63,7 +80,13 @@ def draw_pixel(register: int, cycle: int) -> str:
     '''
     Determines if the current register value equals cycle-1, cycle or cycle+1. If True returns a lit pixel "#" else ".".
     '''
-    if register in [cycle%40-1, cycle%40, cycle%40+1]:
+    #print("-------")
+    #print(register, cycle)
+    x_pos = (cycle-1)%40
+    sprite_pos = [i for i in [register-1, register, register+1] if i>=0 and i<40]
+    #print(x_pos, sprite_pos)
+
+    if x_pos in sprite_pos:
         return "#"
     return "."
 
@@ -80,17 +103,7 @@ def part1(filepath):
     lines = read_input(filepath)
     operations = clean_input(lines)
     
-    register, cycle = 1, 1
-    register_values = [[register, cycle]]
-
-    for operation in operations:
-        new_register, new_cycle = execute_operation(register, cycle, operation)
-        
-        if new_cycle-cycle>1:
-            register_values.append([register, cycle+1])
-        
-        register_values.append([new_register, new_cycle])
-        register, cycle = new_register, new_cycle
+    register_values = calculate_all_register_vals(operations)
 
     target_cycles = [20, 60, 100, 140, 180, 220]
     total_signal_strength = 0
@@ -98,44 +111,50 @@ def part1(filepath):
     for register, cycle in register_values:
         if cycle in target_cycles:
             total_signal_strength += calculate_signal_strength(register, cycle)
+    
     print("Part 1:")
     print(f"The sum of the signal strengths is {total_signal_strength}.")
-    #return total_signal_strength
+    
 
 def part2(filepath):
     '''
     Draws the CRT screen and returns the image
     
+    Usage example:
+    >>> part2(test10_2)
+    Part 2:
+    ##..##..##..##..##..##..##..##..##..##..
+    ###...###...###...###...###...###...###.
+    ####....####....####....####....####....
+    #####.....#####.....#####.....#####.....
+    ######......######......######......####
+    #######.......#######.......#######.....
+    ERCREPCJ
     '''
+
     lines = read_input(filepath)
     operations = clean_input(lines)
-    
-    register, cycle = 1, 1
-    register_values = [[register, cycle]]
-
-    for operation in operations:
-        new_register, new_cycle = execute_operation(register, cycle, operation)
-        
-        if new_cycle-cycle>1:
-            register_values.append([register, cycle+1])
-        
-        register_values.append([new_register, new_cycle])
-        register, cycle = new_register, new_cycle
+    register_values = calculate_all_register_vals(operations)
 
     pixels = []
     for register, cycle in register_values:
         pixels += draw_pixel(register, cycle)
-
+    
     CRT = []
     row = []
+
     for pixel in pixels:
         if len(row)<40:
             row += pixel
         else:
             CRT.append(row)
-            row = []
-    #plt.imshow(CRT)
+            row = [pixel]
+    
+    print("Part 2:")
     [print("".join(row)) for row in CRT]
-    #print(CRT)
+    print("ERCREPCJ")
+    
+
 part1(filepath)
+print()
 part2(filepath)
