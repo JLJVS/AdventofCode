@@ -1,3 +1,4 @@
+
 filepath="..\\data\\input12.txt"
 test12 = "..\\test\\test12.txt"
 
@@ -15,9 +16,19 @@ def convert_to_grid(lines):
     grid = []
     for line in lines:
         grid.append(list(line))
-    return grid
+    dict_grid = {}
+    for i, row in enumerate(grid):
+        for j, val in enumerate(row):
+            if val == "E": 
+                dict_grid[(i,j)] = 27
+            elif val == "S":
+                dict_grid[(i,j)] = 0
+            else:
+                # convert the letters to numerical values
+                dict_grid[(i,j)] = ord(val)-96
+    return dict_grid
 
-def get_start(grid: list[list[str]])-> coord:
+def get_start(grid: dict[coord, int]) -> coord:
     '''
     Finds the starting point on the grid and returns the coordinate
 
@@ -25,12 +36,12 @@ def get_start(grid: list[list[str]])-> coord:
     >>> get_start(convert_to_grid(read_input(test12)))
     (0, 0)
     '''
-    for i, row in enumerate(grid):
-        for j, val in enumerate(row):
-            if val == "S":
-                return i,j
+    for key in grid:
+        if grid[key] == 0:
+            return key
+        
 
-def get_neighbors(grid: list[list[str]], coord: coord) -> [coord]:
+def get_neighbors(grid: dict[coord, int], coord: coord) -> [coord]:
     '''
     Gets the direct neighbors for a specific coordinate and returns a list of those coordinates.
 
@@ -38,16 +49,17 @@ def get_neighbors(grid: list[list[str]], coord: coord) -> [coord]:
     [(1, 0), (0, 1)]
     >>> get_neighbors(convert_to_grid(read_input(test12)), (1,1))
     [(0, 1), (2, 1), (1, 0), (1, 2)]
-    >>> get_neighbors(convert_to_grid(read_input(test12)), (7,4))
-    [(6, 4), (7, 3)]
+    >>> get_neighbors(convert_to_grid(read_input(test12)), (4,7))
+    [(3, 7), (4, 6)]
     '''
     # read the corresonding info from coord and grid
-    x_max, y_max = len(grid[0]), len(grid)
+    keys = [key for key in grid.keys()]
+    x_max, y_max = max([key[0] for key in keys]), max([key[1] for key in keys])
     x, y = coord
 
     # boolean checks to see if the neighbors are allowed and not itself
-    x_allowed = lambda x: x>=0 and x<x_max
-    y_allowed = lambda y: y>=0 and y<y_max
+    x_allowed = lambda x: x>=0 and x<=x_max
+    y_allowed = lambda y: y>=0 and y<=y_max
     not_itself = lambda new_x, new_y : new_x!=x or new_y!= y 
 
     coords =[]
@@ -57,7 +69,7 @@ def get_neighbors(grid: list[list[str]], coord: coord) -> [coord]:
             coords.append((new_x, new_y))
     return coords
 
-def allowed_step(grid: list[list[str]], start: coord, end: coord) -> bool:
+def allowed_step(grid: dict[coord, int], start: coord, end: coord) -> bool:
     '''
     Determines if the transition from start to end is allowed and returns a boolean.
 
@@ -68,22 +80,18 @@ def allowed_step(grid: list[list[str]], start: coord, end: coord) -> bool:
     True
     >>> allowed_step(convert_to_grid(read_input(test12)), (0,1), (0,2))
     True
-    >>> allowed_step(convert_to_grid(read_input(test12)), (0,2), (1,2))
+    >>> allowed_step(convert_to_grid(read_input(test12)), (2,0), (2,1))
     False
     '''
-    x_start, y_start = start
-    x_end, y_end = end
-    start_val, end_val = grid[y_start][x_start], grid[y_end][x_end]
-    
+    start_val, end_val = grid[start], grid[end]
     # always allowed to go to the lowest point and the transition from z to E 
-    if end_val == "a": 
+    if end_val == 1: 
         return True
-    elif or (end_val == "E" and start_val == "z"):
-        return True
+    
     else:
-        return ord(end_val)-ord(start_val)<=1
+        return end_val-start_val<=1
 
-def from_start_to_end(grid: list[list[str]]) -> int:
+def from_start_to_end(grid: dict[coord, int]) -> int:
     '''
     Finds the shortest path between start and end. Returns the number of steps for the shortest path. Applies a breadth first approach.
 
@@ -98,22 +106,18 @@ def from_start_to_end(grid: list[list[str]]) -> int:
     visited = set()
     steps = 0
     
+
     while True:
         steps += 1
-        print(visited)
         new_positions = set()
         for position in current:
             visited.add(position)
-            #print(position)
-            x, y = position
-            
             neighbors = [neighbor for neighbor in get_neighbors(grid, position) if neighbor not in visited]
             for neighbor in neighbors:
-                x_neighbor, y_neighbor = neighbor
-                target = grid[y_neighbor][x_neighbor]
-                if target=="E" and grid[y][x]=="z":
+                target = grid[neighbor]
+                if target==27 and allowed_step(grid, position, neighbor):
                     return steps 
-                if allowed_step(grid, position, neighbor) and target in "abcdefghijklmnopqrstuvwxyz":
+                if allowed_step(grid, position, neighbor):
                     new_positions.add(neighbor)
         
         current = new_positions
@@ -121,6 +125,11 @@ def from_start_to_end(grid: list[list[str]]) -> int:
 def part1(filepath):
     '''
     Finds the number of steps between the starting and end point. 
+
+    Usage example:
+    >>> part1(test12)
+    Part 1:
+    The best signal location can be reached in 31 steps.
     '''
     lines = read_input(filepath)
     grid = convert_to_grid(lines)
@@ -129,6 +138,6 @@ def part1(filepath):
     print("Part 1:")
     print(f"The best signal location can be reached in {steps} steps.")
 
-part1(test12)
 
-print(ord("a"))
+
+part1(filepath)
