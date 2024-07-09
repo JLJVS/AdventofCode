@@ -40,6 +40,17 @@ def get_start(grid: dict[coord, int]) -> coord:
         if grid[key] == 0:
             return key
         
+def get_end(grid: dict[coord, int]) -> coord:
+    '''
+    Finds the starting point on the grid and returns the coordinate
+
+    Usage example:
+    >>> get_start(convert_to_grid(read_input(test12)))
+    (0, 0)
+    '''
+    for key in grid:
+        if grid[key] == 27:
+            return key
 
 def get_neighbors(grid: dict[coord, int], coord: coord) -> [coord]:
     '''
@@ -87,7 +98,6 @@ def allowed_step(grid: dict[coord, int], start: coord, end: coord) -> bool:
     # always allowed to go to the lowest point and the transition from z to E 
     if end_val == 1: 
         return True
-    
     else:
         return end_val-start_val<=1
 
@@ -99,14 +109,12 @@ def from_start_to_end(grid: dict[coord, int]) -> int:
     >>> from_start_to_end(convert_to_grid(read_input(test12)))
     31
     '''
-
     start = get_start(grid)
     current = set()
     current.add(start)
     visited = set()
     steps = 0
     
-
     while True:
         steps += 1
         new_positions = set()
@@ -118,6 +126,35 @@ def from_start_to_end(grid: dict[coord, int]) -> int:
                 if target==27 and allowed_step(grid, position, neighbor):
                     return steps 
                 if allowed_step(grid, position, neighbor):
+                    new_positions.add(neighbor)
+        
+        current = new_positions
+
+def from_end_to_start(grid: dict[coord, int]) -> int:
+    '''
+    Finds the shortest path between start and end. Returns the number of steps for the shortest path. Applies a breadth first approach.
+
+    Usage example:
+    >>> from_end_to_start(convert_to_grid(read_input(test12)))
+    29
+    '''
+    start = get_end(grid)
+    current = set()
+    current.add(start)
+    visited = set()
+    steps = 0
+    
+    while True:
+        steps += 1
+        new_positions = set()
+        for position in current:
+            visited.add(position)
+            neighbors = [neighbor for neighbor in get_neighbors(grid, position) if neighbor not in visited]
+            for neighbor in neighbors:
+                target = grid[neighbor]
+                if target==1 and allowed_step(grid, neighbor, position):
+                    return steps 
+                if allowed_step(grid, neighbor, position):
                     new_positions.add(neighbor)
         
         current = new_positions
@@ -138,6 +175,20 @@ def part1(filepath):
     print("Part 1:")
     print(f"The best signal location can be reached in {steps} steps.")
 
+def part2(filepath):
+    '''
+    Finds the number of steps between the starting and end point. 
 
+    Usage example:
+    >>> part2(test12)
+    Part 2:
+    The shortest path to the signal location from the lowest height can be reached in 29 steps.
+    '''
+    lines = read_input(filepath)
+    grid = convert_to_grid(lines)
+    steps = from_end_to_start(grid)
+    print("Part 2:")
+    print(f"The shortest path to the signal location from the lowest height can be reached in {steps} steps.")
 
 part1(filepath)
+part2(filepath)
