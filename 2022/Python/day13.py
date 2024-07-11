@@ -28,7 +28,10 @@ def get_pairs(lines) -> list[pair]:
     pairs.append(pair)
     return pairs
 
-def com(a, b):
+def com(a: int, b: int):
+    '''
+    com is a sorting function that returns 1, 0, -1 if a is smaller, equal to or greater than b.
+    '''
     if a<b:
         return 1
     elif a == b:
@@ -37,6 +40,9 @@ def com(a, b):
         return -1
     
 def compare(left: list[int], right: list[int]) -> int:
+    '''
+    Recursively determines if the pair is correctly ordered with the help of com. returns 1 or -1 for correctly and incorrectly respectively
+    '''
 
     left_int = isinstance(left, int)
     right_int = isinstance(right, int)
