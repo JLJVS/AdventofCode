@@ -94,7 +94,7 @@ def get_bitmask(non_empty: dict[valve_name, valve_name]) -> dict[valve_name, int
 
 
 
-def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows, non_empty) -> int:
+def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows, indices, cache) -> int:
     '''
     Uses a depth-first-search algorithm to find the highest pressure. 
     Parameters: 
@@ -109,17 +109,11 @@ def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows
     '''
    
     valve = starting_position    
-
-    indices = get_bitmask(non_empty)
-
-
+    
     # check first if we have already calculated this configuration by checking the cache
     if (time, valve, bitmask) in cache:
         return cache[(time, valve, bitmask)]
     
-    
-    indices = get_bitmask(non_empty)
-
     max_pressure = 0
 
     for neighbor in distances[valve]:
@@ -136,7 +130,7 @@ def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows
         if remaining_time <= 0:
             continue
 
-        max_pressure = max(max_pressure, dfs(neighbor, remaining_time, bitmask | bit , distances, flows, non_empty) + flows[neighbor] * remaining_time)
+        max_pressure = max(max_pressure, dfs(neighbor, remaining_time, bitmask | bit , distances, flows, indices, cache) + flows[neighbor] * remaining_time)
 
     # cache the result    
     cache[(time, valve, bitmask)] = max_pressure
@@ -144,7 +138,12 @@ def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows
 
 def part1(filepath):
     '''
-    
+    Finds the max pressure that can be released
+
+    Usage example:
+    >>> part1(test16)
+    Part 1:
+    The most pressure that can be released is 1651.
     '''
     # get the flow rates and the tunnels going to which valve
     lines = read_input(filepath)
@@ -153,13 +152,42 @@ def part1(filepath):
     # get the distances between the valves and non zero flow valves
     distances, non_empty = get_distances(flows, tunnels)
     indices = get_bitmask(non_empty)
-    global cache 
     cache = {}
 
     # apply the dfs
-
-    pressure = dfs("AA", 30,  0, distances, flows, non_empty )
+    pressure = dfs("AA", 30,  0, distances, flows, indices, cache)
     print("Part 1:")
     print(f"The most pressure that can be released is {pressure}.")
 
+
+def part2(filepath):
+    '''
+    Finds how much pressure you can release by training an elphant to help you for 4 minutes.
+
+    Usage example:
+    >>> part2(test16)
+    Part 2:
+    The most pressure that can be released is 1707 with the help of an elephant.
+    '''
+
+    # get the flow rates and the tunnels going to which valve
+    lines = read_input(filepath)
+    tunnels, flows = get_valves(lines)
+    
+    # get the distances between the valves and non zero flow valves
+    distances, non_empty = get_distances(flows, tunnels)
+    indices = get_bitmask(non_empty)
+    cache = {}
+
+    # apply the dfs
+    b = (1 << len(non_empty)) -1
+    pressure = 0
+
+    for i in range((b+1)//2):
+        pressure = max(pressure, dfs("AA", 26,  i, distances, flows, indices, cache) + dfs("AA", 26, b^i, distances, flows, indices, cache))
+    print("Part 2:")
+    print(f"The most pressure that can be released is {pressure} with the help of an elephant.")
+
+
 part1(filepath)
+part2(filepath)
