@@ -31,14 +31,70 @@ def get_valves(lines: list[str]) -> (dict[valve_name, list[valve_name]],dict[val
         parts = line.replace(";", " ").replace("=", " ").replace(",", " ").split()
         org_valve = parts[1]
         flow = int(parts[5])
-        flows[valve_name] = flow
+        flows[org_valve] = flow
         valves[org_valve] = []
         for valve in parts[10:]:
             valves[org_valve].append(valve)
 
     return valves, flows
 
-def dfs(time: int, valve: valve_name, bitmask) -> int:
+def get_distances(flow_rates: dict[valve_name, flow_rate], tunnels: dict[valve_name, valve_name], starting_position="AA") -> (dict[valve_name, valve_name], list[valve_name]):
+    '''
+    Gets the distances between all valves, in this case the network is a fully connected network. And returns a dict with all distances between valves adn a list of non zero flow rate valves.
+    '''
+
+    distances = {}
+    non_empty = []
+
+    for valve in flow_rates.keys():
+        # check if the flow rate is 0 for that valve 
+        zero_flow = not flow_rates[valve]
+        not_start = valve != starting_position
+
+        # if it's not the starting node and zero flow we skip it
+        if not_start and zero_flow:
+            continue
+
+        if valve != starting_position:
+            non_empty.append(valve)
+
+        distances[valve] = {valve: 0, starting_position: 0}
+        visited = {valve}
+
+        queue = deque([(0, valve)])
+
+        while queue:
+            distance, position = queue.popleft()
+            for neighbor in tunnels[position]:
+                # check if we already visited the valve
+                if neighbor in visited:
+                    continue
+                visited.add(neighbor)
+                if flow_rates[neighbor]:
+                    distances[valve][neighbor] = distance +1
+                # add the neighbor with the distance
+                queue.append((distance +1, neighbor))
+        
+        # remove the path to the starting position and the distance to itself
+        del distances[valve][valve]
+        if not_start:
+            del distances[valve][starting_position]
+    
+    return distances, non_empty
+
+def get_bitmask(non_empty: dict[valve_name, valve_name]) -> dict[valve_name, int]:
+    '''
+    Generates a bitmask for the non zero flow valves and returns a dict for the bitmask
+    '''
+
+    indices = dict()
+    for index, valve in enumerate(non_empty):
+        indices[valve] = index
+    return indices
+
+
+
+def dfs(starting_position: valve_name, time: int, bitmask: int, distances, flows, non_empty) -> int:
     '''
     Uses a depth-first-search algorithm to find the highest pressure. 
     Parameters: 
@@ -51,11 +107,19 @@ def dfs(time: int, valve: valve_name, bitmask) -> int:
     Usage example:
     >>>  
     '''
+   
+    valve = starting_position    
+
+    indices = get_bitmask(non_empty)
+
 
     # check first if we have already calculated this configuration by checking the cache
     if (time, valve, bitmask) in cache:
         return cache[(time, valve, bitmask)]
     
+    
+    indices = get_bitmask(non_empty)
+
     max_pressure = 0
 
     for neighbor in distances[valve]:
@@ -72,7 +136,7 @@ def dfs(time: int, valve: valve_name, bitmask) -> int:
         if remaining_time <= 0:
             continue
 
-        max_pressure = max(max_pressure, dfs(remaining_time, neighbor, bitmask | bit) + valves[neighbor] * remaining_time)
+        max_pressure = max(max_pressure, dfs(neighbor, remaining_time, bitmask | bit , distances, flows, non_empty) + flows[neighbor] * remaining_time)
 
     # cache the result    
     cache[(time, valve, bitmask)] = max_pressure
@@ -85,8 +149,17 @@ def part1(filepath):
     # get the flow rates and the tunnels going to which valve
     lines = read_input(filepath)
     tunnels, flows = get_valves(lines)
+    
+    # get the distances between the valves and non zero flow valves
+    distances, non_empty = get_distances(flows, tunnels)
+    indices = get_bitmask(non_empty)
+    global cache 
+    cache = {}
 
-    distances = {}
-    non_empty = [] 
-   
-part1(test16)
+    # apply the dfs
+
+    pressure = dfs("AA", 30,  0, distances, flows, non_empty )
+    print("Part 1:")
+    print(f"The most pressure that can be released is {pressure}.")
+
+part1(filepath)
