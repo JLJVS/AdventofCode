@@ -223,7 +223,7 @@ def part2(filepath):
     Usage example:
     >>> part1(test17)
     Part 2:
-    The tower will be 3068 units tall after the 2022th rock.
+    The tower will be 1514285714288  units tall after the 1000000000000th rock.
     '''
     # read the input and set the floor
     jets = read_input(filepath)[0]    
@@ -232,7 +232,7 @@ def part2(filepath):
     jet_index = 0
     N = 1000000000000
 
-    for i in range(2022):
+    for i in range(N):
         # generate the correct shape
         max_height = max([i[1] for i in occupied.keys()])
         if i%5==0:
@@ -261,9 +261,20 @@ def part2(filepath):
                 break
             shape = new_shape
             new_shape = []
+        max_height = max([i[1] for i in occupied.keys()])
+        # trim occupied
+        new_ocuppied = {}
+        for coord in occupied:
+            if coord[1]<max_height-100:
+                continue
+            else:
+                new_ocuppied[coord] = "#"
+        occupied = new_ocuppied
+        
         
     max_height = max([i[1] for i in occupied.keys()])
-    print("Part 1:")
-    print(f"The tower will be {max_height+1} units tall after the 2022th rock.")
+    print("Part 2:")
+    print(f"The tower will be {max_height+1} units tall after the {N}th rock.")
 
 part1(filepath)
+part2(filepath)
