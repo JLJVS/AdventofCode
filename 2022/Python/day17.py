@@ -221,9 +221,9 @@ def part2(filepath):
     Calculates the height of the twoer after the 2022th rock.
 
     Usage example:
-    >>> part1(test17)
+    >>> part2(test17)
     Part 2:
-    The tower will be 1514285714288  units tall after the 1000000000000th rock.
+    The tower will be 1514285714288 units tall after the 1000000000000th rock.
     '''
     # read the input and set the floor
     jets = read_input(filepath)[0]    
@@ -231,8 +231,11 @@ def part2(filepath):
     max_height = max([i[1] for i in occupied.keys()])
     jet_index = 0
     heights = [max_height]
+    
+    N = 6000
+    N_desired = 1000000000000
 
-    for i in range(1000):
+    for i in range(N):
         # generate the correct shape
         max_height = max([i[1] for i in occupied.keys()])
         if i%5==0:
@@ -263,20 +266,41 @@ def part2(filepath):
             new_shape = []
         
         max_height = max([i[1] for i in occupied.keys()])
-        #print(max_height)
+        # keep track of all the heights
         heights.append(max_height)
-
-    max_height = max([i[1] for i in occupied.keys()])
-   
+       
+    # try to find the cycle length
+    seen = dict()
+    first = None
+    second = None
     for i, height in enumerate(heights):
-        if i==0:
+        if i< 100  or i>N-20:
             continue
         else:
-            print(i, height - heights[i-1])
-    print("Part 1:")
-    print(f"The tower will be {max_height+1} units tall after the 2022th rock.")
-    #print("Part 2:")
-    #print(f"The tower will be {max_height+1} units tall after the {N}th rock.")
+            key = tuple([ h - height for h in heights[i-50:i]])
+            if key in seen:
+                if first == None:
+                    first = seen[key][0]
+                    first_key = key
+                    second = i
+                seen[key].append(i)
+            seen[key] = [i]
+                
+    # get the number of cycles and the start of the cycle and the remainder after cycles
+    
+    cycle_length = second - first
+    
+    N_cycle =   (N_desired-first)//(cycle_length)
+    rem_cycle = (N_desired-first)%cycle_length
+    height_before_cycle = heights[first]
+    height_cycle = heights[second] - heights[first]
+    height_after_cycle = heights[second+rem_cycle]-heights[second]
+    total_height = height_before_cycle+height_cycle*N_cycle+height_after_cycle
+    
+    
+    print("Part 2:")
+    print(f"The tower will be {total_height+1} units tall after the {N_desired}th rock.")
+  
 
 part1(filepath)
 part2(filepath)
