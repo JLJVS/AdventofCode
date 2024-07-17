@@ -230,9 +230,9 @@ def part2(filepath):
     occupied = generate_floor()
     max_height = max([i[1] for i in occupied.keys()])
     jet_index = 0
-    N = 1000000000000
+    heights = [max_height]
 
-    for i in range(N):
+    for i in range(1000):
         # generate the correct shape
         max_height = max([i[1] for i in occupied.keys()])
         if i%5==0:
@@ -261,20 +261,22 @@ def part2(filepath):
                 break
             shape = new_shape
             new_shape = []
+        
         max_height = max([i[1] for i in occupied.keys()])
-        # trim occupied
-        new_ocuppied = {}
-        for coord in occupied:
-            if coord[1]<max_height-100:
-                continue
-            else:
-                new_ocuppied[coord] = "#"
-        occupied = new_ocuppied
-        
-        
+        #print(max_height)
+        heights.append(max_height)
+
     max_height = max([i[1] for i in occupied.keys()])
-    print("Part 2:")
-    print(f"The tower will be {max_height+1} units tall after the {N}th rock.")
+   
+    for i, height in enumerate(heights):
+        if i==0:
+            continue
+        else:
+            print(i, height - heights[i-1])
+    print("Part 1:")
+    print(f"The tower will be {max_height+1} units tall after the 2022th rock.")
+    #print("Part 2:")
+    #print(f"The tower will be {max_height+1} units tall after the {N}th rock.")
 
 part1(filepath)
 part2(filepath)
