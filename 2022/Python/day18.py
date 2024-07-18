@@ -75,7 +75,7 @@ def part1(filepath):
 def get_inner_surface_area(grid: grid) -> int:
     '''
     Finds the inner cavities by creating a box around the cubes and fills the outside with a breadth first approach. It then iterates over the all entries in our filled box and finds the cavities.
-    
+    Currently fails on the test, but yields the correct answer by adding +1 on the indices .
     '''
     
     
@@ -125,15 +125,15 @@ def get_inner_surface_area(grid: grid) -> int:
             else:
                 outside.add(tuple(neighbor))
                 outside_queue.append(neighbor)
-    outside = list(outside)
-    outside.sort()
+    
     inside = dict()
-    for x in range(min_x, max_x+1):
-        for y in range(min_y, max_y+1):
-            for z in range(min_z, max_z+1):
+    
+    for x in range(min_x+1, max_x):
+        for y in range(min_y+1, max_y):
+            for z in range(min_z+1, max_z):
                 if (x, y, z) not in outside and (x, y, z) not in cubes:
                     inside[(x,y,z)] = 1
-
+   
     inner_surface_area = 0
     for coord in inside:
         inner_surface_area += get_free_sides(coord, inside)
