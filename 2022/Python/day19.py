@@ -66,22 +66,24 @@ def get_geodes(blueprint: blueprint) -> int:
     # set up the states to explore
     # resources/machines [ore, clay, obsidian, geode]
     max_geodes = 0
-    time = 24
+    time = 23
     resources = [0, 0, 0, 0]
     machines = [1, 0, 0, 0]
     initial_state = (time, machines, resources)
-    states = set()
-    states.add(initial_state)
-    resolved_states = set()
+    states = []
+    before_seen = []
+    states.append(initial_state)
+    
 
     while states:
-        new_states = set()
-        print(states)
+        print(len(states))
+        new_states = []
         for state in states:
             time, machines, resources = state
             new_time = time - 1
             if time == 0:
-                resolved_states.add(state)
+                geodes = resources[-1]
+                max_geodes = max(max_geodes, geodes)
                 continue
             
             # production from machines x = resources, y = machines
@@ -105,19 +107,23 @@ def get_geodes(blueprint: blueprint) -> int:
                     new_machines = machines[::]
                     new_machines[i] += 1
                     new_state = (new_time, new_machines, new_resources)
-                    new_states.add(new_state)
+                    if new_state in before_seen:
+                        continue
+                    new_states.append(new_state)
     
             # do nothing
             new_resources = machine_production(resources, machines)
             new_resources = remove_excess(new_resources, max_resources)
             new_state = (new_time, machines, new_resources)
-            new_states.add(new_state)
+            if new_state in before_seen:
+                continue
+            new_states.append(new_state)
         states = new_states
-    print(resolved_states)
+    
     print(max_resources)
     print(resources)
     print(machines)
-    
+    print(max_geodes)
 
 
 
