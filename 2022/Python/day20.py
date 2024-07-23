@@ -22,6 +22,9 @@ class Node:
     def set_right(self, other):
         self.right = other
 
+    def set_val(self, val):
+        self.val = val
+
 def read_input(filepath) -> list[str]:
     
     with open(filepath, "r") as f:
@@ -55,6 +58,7 @@ def shift_entries(linked_list: list[Node]):
     '''
     Rotates the entries of the linked list by the val of the node.
     ''' 
+    N = len(linked_list)-1
     for i in range(len(linked_list)):
         
         node = linked_list[i]
@@ -64,7 +68,7 @@ def shift_entries(linked_list: list[Node]):
         
         if val < 0:
             val = abs(val)
-            for _ in range(val):
+            for _ in range(val%N):
                 # get the three nodes of interest
                 current_right = node.get_right()
                 current_left = node.get_left()
@@ -79,7 +83,7 @@ def shift_entries(linked_list: list[Node]):
                 
                 
         else :
-            for _ in range(val):
+            for _ in range(val%N):
                 # get the three nodes of interest
                 current_right = node.get_right()
                 current_left = node.get_left()
@@ -118,7 +122,46 @@ def part1(filepath):
     print("Part 1:")
     print(f"The sum of the three numbers that form the grove coordinates is {total}")
 
+def part2(filepath):
+    '''
+    Finds the sum of the three grove coordinates after multiplying with the key and mixing the list 10 times.
+
+    Usage example:
+    >>> part2(test20)
+    Part 2:
+    The sum of the three numbers that form the grove coordinates is 1623178306
+    '''
+    lines = read_input(filepath)
+    linked_list = convert_to_linked_list(lines)
+    key = 811589153
+    vals = [node.get_val() for node in linked_list]
+    final_vals = [val*key for val in vals]
+    for i, node in enumerate(linked_list):
+        current_val = node.get_val()
+        new_val = current_val*key
+        node.set_val(new_val)
+
+    rotated = shift_entries(linked_list)
+    for _ in range(9):
+        rotated = shift_entries(rotated)
+    for i, node in enumerate(rotated):
+        node.set_val(final_vals[i])
+    total = 0
+    for node in rotated:
+        val = node.get_val()
+        if val == 0:
+            for i in range(3001):
+                if i in [1000, 2000, 3000]:
+                    total += node.get_val()
+                node = node.get_right()
+    print("Part 2:")
+    print(f"The sum of the three numbers that form the grove coordinates is {total}")
+
+
+
+
 part1(filepath)
+part2(filepath)
             
             
     
