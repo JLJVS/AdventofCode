@@ -54,8 +54,7 @@ def get_geodes(blueprint: blueprint) -> int:
         for i, cost in enumerate(resource_types[:-1]):
             costs[-1].append(blueprint[resource_type][cost])
         costs[-1].append(0)
-    print(costs)
-
+    
     # get the maximum amount of resources needed for each machine
     max_ore = max(cost[0] for cost in costs)
     max_clay = max(cost[1] for cost in costs)
@@ -66,7 +65,7 @@ def get_geodes(blueprint: blueprint) -> int:
     # set up the states to explore
     # resources/machines [ore, clay, obsidian, geode]
     max_geodes = 0
-    time = 23
+    time = 1
     resources = [0, 0, 0, 0]
     machines = [1, 0, 0, 0]
     initial_state = (time, machines, resources)
@@ -76,12 +75,13 @@ def get_geodes(blueprint: blueprint) -> int:
     
 
     while states:
-        print(len(states))
+        
         new_states = []
         for state in states:
+            
             time, machines, resources = state
-            new_time = time - 1
-            if time == 0:
+            new_time = time + 1
+            if time == 5:
                 geodes = resources[-1]
                 max_geodes = max(max_geodes, geodes)
                 continue
@@ -108,8 +108,9 @@ def get_geodes(blueprint: blueprint) -> int:
                     new_machines[i] += 1
                     new_state = (new_time, new_machines, new_resources)
                     if new_state in before_seen:
-                        continue
-                    new_states.append(new_state)
+                        pass
+                    else:
+                        new_states.append(new_state)
     
             # do nothing
             new_resources = machine_production(resources, machines)
@@ -118,6 +119,7 @@ def get_geodes(blueprint: blueprint) -> int:
             if new_state in before_seen:
                 continue
             new_states.append(new_state)
+        print(new_states)
         states = new_states
     
     print(max_resources)
