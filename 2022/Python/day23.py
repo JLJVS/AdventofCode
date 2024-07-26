@@ -1,5 +1,6 @@
 filepath="..\\data\\input23.txt"
 test23 = "..\\test\\test23.txt"
+test232 = "..\\test\\test23_2.txt"
 
 coord = list[int, int]
 grid = dict[coord, str]
@@ -150,11 +151,33 @@ def update_directions(directions: list[str]) -> list[str]:
     directions.append(to_add)
     return directions
 
+def no_neighbors(elves: grid, elf: coord) -> bool:
+    '''
+    Checks if the elf has any neighbors
+
+    NW | N | NE             -1,-1 | 0,-1 | 1,-1
+    W  | P |  E             -1, 0 | 0, 0 | 1, 0
+    SW | S | SE             -1, 1 | 0, 1 | 1, 1
+    '''
+    x, y = elf
+    neighbors = [(-1,-1), (0,-1),  (1,-1),
+                 (-1, 0),          (1, 0),
+                 (-1, 1), (0, 1),  (1, 1)]
+    for neighbor in neighbors:
+        dx, dy = neighbor
+        neighbor_pos = (x+dx, y+dy)
+        if neighbor_pos in elves.keys():
+            return False
+    return True
+
+
 def propose_move(elves: grid, elf: coord, directions: list[str]) -> (coord, list[str]):
     '''
     Proposes a move for the elf to make. returns the proposed position and the updated directions
     '''
     x, y = elf
+    if no_neighbors(elves, elf):
+        return elf
     for direction in directions:
         to_return = False
         dx, dy = 0, 0
@@ -175,6 +198,28 @@ def propose_move(elves: grid, elf: coord, directions: list[str]) -> (coord, list
             return new_elf
     return elf
 
+def print_elves(elves: grid):
+    '''
+    Outputs the elves and their position on the grid
+    '''
+    min_x = min([elf[0] for elf in elves])
+    min_y = min([elf[1] for elf in elves])
+    elves = [elf for elf in elves]
+    max_x = max([key[0] for key in elves])
+    max_y = max([key[1] for key in elves])
+    elves.sort()
+    print()
+    print("  " + "".join([str(abs(i)) for i in range(min_x, max_x+1)]))
+    for j in range(min_y, max_y+1):
+        
+        row = str(abs(j)) + " "
+        for i in range(min_x, max_x+1):
+            if (i,j) in elves:
+                row += "#"
+            else:
+                row += "_"
+        print(row)
+
 def part1(filepath):
     '''
     Calculates the number of empty tiles the retcangle enclosing the elves contains after 10 rounds of dispersion.
@@ -187,6 +232,7 @@ def part1(filepath):
     lines = read_input(filepath)
     elves = get_elves(lines)
     directions = ["N", "S", "W", "E"]
+    
     for _ in range(10):
         new_elves = []
         original_pos = dict()
@@ -198,34 +244,38 @@ def part1(filepath):
                 original_pos[new_pos] = []
             original_pos[new_pos] += [pos]
             
-        for pos in original_pos:
-            if len(original_pos[pos])>1:
-                new_elves += original_pos[pos]
+        for new_pos in original_pos:
+            if len(original_pos[new_pos])>1:
+                new_elves += original_pos[new_pos]
             else:
-                new_elves.append(pos)
+                new_elves.append(new_pos)
+            # if i ==1 :
+            #     print(new_elves)
+        new_elves.sort()
         new_elves = {elf: 1 for elf in new_elves}
-        
         directions = update_directions(directions)    
         elves = new_elves
-       # print(len(elves))
-    
+        
     min_x = min([elf[0] for elf in elves])
     max_x = max([elf[0] for elf in elves])
     min_y = min([elf[1] for elf in elves])
     max_y = max([elf[1] for elf in elves])
-    x_side = 2 + abs(min_x-max_x)
-    y_side = 2 + abs(min_y-max_y)
+    x_side = 1 + abs(min_x-max_x)
+    y_side = 1 + abs(min_y-max_y)
     N_elves = len(elves)
     ans = x_side*y_side - N_elves
-    elves = [(key[0]+abs(min_x), key[1]+abs(min_y)) for key in elves]
-    elves.sort()
-    print(elves)
+
     print("Part 1:")
     print(f"The rectangle enclosing the elves contains {ans} empty tiles.")
     
 def part2(filepath):
     '''
-    
+    Calculates the number of rounds before elves stop moving.
+
+    Usage example:
+    >>> part2(test23)
+    Part 2:
+    The first round the elves stop moving is the 20th round.
     '''
     lines = read_input(filepath)
     elves = get_elves(lines)
@@ -253,9 +303,13 @@ def part2(filepath):
         if elves == new_elves:
             break
         elves = new_elves
-    
-    print(i)
+
+    print("Part 2:")
+    print(f"The first round the elves stop moving is the {i+1}th round.")
+   
 
 
-part1(test23)
-#part2(test23)
+part1(filepath)
+part2(filepath)
+
+
