@@ -1,5 +1,3 @@
-from collections import deque
-
 filepath="..\\data\\input24.txt"
 test24 = "..\\test\\test24.txt"
 
@@ -113,6 +111,34 @@ def get_possible_moves(blizzards: set[coord], walls: set[coord], pos: coord) -> 
             allowed.append(new_pos)
     return allowed
 
+def go_from_A_to_B(blizzards: blizzards, walls: grid, A: coord, B: coord) -> tuple[blizzards, int]:
+    '''
+    Determines the time/number of steps needed to go from A to B. Returns the current state of the blizzards and the time required
+    
+    '''
+
+    walls_set = set(key for key in walls)
+    steps = 0
+    in_transit = True
+    current = [A]
+
+    while in_transit:
+        
+        steps += 1
+        blizzards = update_blizzards(blizzards, walls)
+        blizzards_set = set(key[0] for key in blizzards)
+        new_current = []
+        for pos in current:
+            new_current += get_possible_moves(blizzards_set, walls_set, pos)
+            
+        new_current = list(set(new_current))
+        current = new_current
+        if B in current:
+            in_transit = False
+            break
+
+    return blizzards, steps
+
 def part1(filepath):
     '''
     Determines the fewest number of minutes required to reach the exit.
@@ -125,30 +151,36 @@ def part1(filepath):
     lines = read_input(filepath)
     blizzards = get_blizzards(lines)
     walls, start, exit = get_walls(lines)
-    walls_set = set(key for key in walls)
-    current = [start]
-    steps = 0
-    in_transit = True
-
-    while in_transit:
-        
-        steps += 1
-        blizzards = update_blizzards(blizzards, walls)
-        blizzards_set = set(key[0] for key in blizzards)
-        #print(blizzards_set)
-        new_current = []
-        for pos in current:
-            new_current += get_possible_moves(blizzards_set, walls_set, pos)
-            
-        new_current = list(set(new_current))
-        current = new_current
-        if exit in current:
-            in_transit = False
-            break
     
+    blizzards, steps = go_from_A_to_B(blizzards, walls, start, exit)
+
     print("Part 1:")
     print(f"The exit can be reached in {steps} minutes.")
 
+def part2(filepath):
+    '''
+    Determines how long an added round trip would take.
+
+    Usage example:
+    >>> part2(test24)
+    Part 2:
+    The exit can be reached, with an extra round trip, in 54 minutes.
+    '''
+    lines = read_input(filepath)
+    blizzards = get_blizzards(lines)
+    walls, start, exit = get_walls(lines)
+
+    # go the exit for the first time
+    blizzards, steps_1 = go_from_A_to_B(blizzards, walls, start, exit)
+    # go back for snacks
+    blizzards, steps_2 = go_from_A_to_B(blizzards, walls, exit, start)
+    # and back to the exit 
+    blizzards, steps_3 = go_from_A_to_B(blizzards, walls, start, exit)
+
+    total = steps_1 + steps_2 + steps_3
+    print("Part 2:")
+    print(f"The exit can be reached, with an extra round trip, in {total} minutes.")
 
 part1(filepath)
+part2(filepath)
 
