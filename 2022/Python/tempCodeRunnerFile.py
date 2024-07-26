@@ -1,2 +1,1 @@
-if i ==1 :
-            #     print(new_elves)
+new_x, new_y
