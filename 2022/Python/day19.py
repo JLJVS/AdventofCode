@@ -135,6 +135,32 @@ def part1(filepath):
     print("Part 1:")
     print(f"The quality level of all the blueprints is {total}.")     
     
-            
+def part2(filepath):
+    '''
+    Calculates the product of the three remaining blue prints
+
+    Usage example:
+    >>> part2(test19)
+    Part 2:
+    The product of quality levels of the three remaining blueprints is 3472. 
+    '''
+    lines = read_input(filepath)
+    blueprints, max_costs = get_blueprints(lines)
+
+    time = 32
+    # set up the starting values
+    #   [ore, clay, obsidian, geodes]
+    
+    total = 1
+    for i, blueprint in enumerate(blueprints[:3]):
+        initial_resources   = [0, 0, 0, 0]
+        initial_robots      = [1, 0, 0, 0]
+        initial_cache       = {}
+        max_cost = max_costs[i]
+        geodes = dfs(time, blueprint, max_cost, initial_cache,  initial_robots, initial_resources)
+        total *= geodes
+    print("Part 2:")
+    print(f"The product of quality levels of the three remaining blueprints is {total}.")    
 
 part1(filepath)
+part2(filepath)
