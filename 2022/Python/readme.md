@@ -39,7 +39,7 @@ Solution for Advent of Code [2022](https://adventofcode.com/2022)
 |  18 |  1   | Boiling Boulders | :heavy_check_mark: | Given a number of 1x1x1 cubes determine the surface area |
 | [url](https://adventofcode.com/2022/day/18) | 2 | Cavities | :heavy_check_mark: | Create a block encasing the cubes to find the cavities (reverse search) (fill with BFS) |
 |  19 |  1   | Not enough Minerals | :heavy_check_mark: | optimization problem |
-| [url](https://adventofcode.com/2022/day/19) | 2 | Description | | Notes |
+| [url](https://adventofcode.com/2022/day/19) | 2 | Description | :heavy_check_mark: | See Part 1 |
 |  20 |  1   | Grove Positioning System | :heavy_check_mark: | rotating through a bus, used a linked list implementation |
 | [url](https://adventofcode.com/2022/day/20) | 2 | Increase the numbers | ✔️ | Because the numbers are too big use modular arithmetic |
 |  21 |  1   | Monkey Match | :heavy_check_mark: | Game of telephone |
