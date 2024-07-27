@@ -88,7 +88,10 @@ def turn(facing: direction, instruction: str) -> direction:
                  "E": {"L": "N", "R": "S"},
                  }
     return directions[facing][instruction]
-    
+
+def 
+
+
 def part1(filepath):
     '''
     Finds the password from the final coordinate by following the monkey notes.
