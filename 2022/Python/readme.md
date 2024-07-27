@@ -50,5 +50,5 @@ Solution for Advent of Code [2022](https://adventofcode.com/2022)
 | [url](https://adventofcode.com/2022/day/23) | 2 | When do they stop moving | :heavy_check_mark: | See Part 1 | |
 |  24 |  1   | Blizzard Basin | :heavy_check_mark: | Pathfinding | |
 | [url](https://adventofcode.com/2022/day/24) | 2 | From A to B to A to B | :heavy_check_mark: | See Part 1 | |
-|  25 |  1   | Full of Hot Air | :heavy_check_mark: | Notes | |
+|  25 |  1   | Full of Hot Air | :heavy_check_mark: | Converting base 10 numbers to a different symbol base 5. | |
 | [url](https://adventofcode.com/2022/day/25) | 2 | Description | | Notes | |
