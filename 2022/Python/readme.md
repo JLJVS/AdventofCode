@@ -45,7 +45,7 @@ Solution for Advent of Code [2022](https://adventofcode.com/2022)
 |  21 |  1   | Monkey Match | :heavy_check_mark: | Game of telephone | |
 | [url](https://adventofcode.com/2022/day/21) | 2 | Now it's split in two | :heavy_check_mark: |  one game of telephone to forward and one game of reverse fill  | |
 |  22 |  1   | Monkey Map | :heavy_check_mark: | move through a maze | |
-| [url](https://adventofcode.com/2022/day/22) | 2 | now unroll the map into a cube | | Cube construction/Rotation/Spatial Mapping | :heavy_check_mark: |
+| [url](https://adventofcode.com/2022/day/22) | 2 | now unroll the map into a cube | :heavy_check_mark: | Cube construction/Rotation/Spatial Mapping | :heavy_check_mark: |
 |  23 |  1   | Unstable Diffusion | :heavy_check_mark: | The problem mimics how cellular automata move | |
 | [url](https://adventofcode.com/2022/day/23) | 2 | When do they stop moving | :heavy_check_mark: | See Part 1 | |
 |  24 |  1   | Blizzard Basin | :heavy_check_mark: | Pathfinding | |
