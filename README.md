@@ -10,6 +10,6 @@ Advent of Code solutions for several years
 | 2019 |        |      |     |       |
 | 2020 |        |      |     |       |
 | 2021 |        |      |     |       |
-| [2022](https://adventofcode.com/2022) |  [47/50](https://github.com/JLJVS/AdventofCode/tree/main/2022/Python) |      |     |       |
+| [2022](https://adventofcode.com/2022) |  [50/50](https://github.com/JLJVS/AdventofCode/tree/main/2022/Python) |      |     |       |
 | 2023 |        |      |     |       |
 
