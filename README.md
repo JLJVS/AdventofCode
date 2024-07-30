@@ -1,7 +1,8 @@
 # AdventofCode
 Advent of Code solutions for several years
 
-The input and test files are stored in a folder named data and test in the year folder.
+The input and test files are stored in a folder named data and test in the year folder. The input files are not uploaded as stated by Advent of Code.
+
 Python tests are documented in the docstrings of the functions. Files can be tested by calling python -m doctest filename.py in the terminal.
 
 
