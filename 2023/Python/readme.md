@@ -4,8 +4,8 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 |-----|------|-------------|-----------|------|------------|
 |  01 |  1   | Trebuchet?! | :heavy_check_mark: | Regex | |
 | [url](https://adventofcode.com/2023/day/1) | 2 | Written and numerical digits  | :heavy_check_mark: | Watch out for overlap in digit detection | |
-|  02 |  1   | Title |  | Notes | |
-| [url](https://adventofcode.com/2023/day/2) | 2 | Title  |  | Notes | |
+|  02 |  1   | Cube Conundrum | ✔️ | Find allowed games | |
+| [url](https://adventofcode.com/2023/day/2) | 2 | Find the minumum number of cubes | ✔️ | Good use of reduce and lambda functions | |
 |  03 |  1   | Title |  | Notes | |
 | [url](https://adventofcode.com/2023/day/3) | 2 | Title  |  | Notes | |
 |  04 |  1   | Title |  | Notes | |
