@@ -84,7 +84,44 @@ def get_nums(grid: grid) -> list[int]:
     
     return total
 
-def find_num(grid: grid, pos: coord) -> tuple[c]
+def find_num(grid: grid, pos: coord) -> int:
+    '''
+    Finds the number at the given coordinate and returns it as an int
+    '''
+
+    digits = "0123456789"
+    is_a_digit = lambda val: val in digits
+    current = pos
+
+    # first move left to find the number
+    while grid.get(current) != None:
+        current_val = grid.get(current)
+        if is_a_digit(current_val):
+            x, y = current
+            x -= 1
+            current = (x, y)
+        else:
+            break
+    
+    # set the start position
+    x, y = current
+    x += 1
+    current = (x, y)
+    number = ""
+
+    # go to the right
+    while grid.get(current) != None:
+        current_val = grid.get(current)
+        if is_a_digit(current_val):
+            number += current_val
+            x, y = current
+            x += 1
+            current = (x, y)
+        else:
+            break
+    return int(number)
+            
+
 
 def get_gears(grid: grid) -> int:
     '''
@@ -92,12 +129,26 @@ def get_gears(grid: grid) -> int:
     '''
     star = "*"
     digits = "0123456789"
-    checked = set()
-
-    unchecked = lambda pos: pos not in checked
-    is_a_digit = lambda val: val in digits
+    
+    is_a_digit = lambda val: grid[val] in digits
     is_a_star = lambda val: val == star
+    total = 0
 
+    for pos, val in grid.items():
+        if is_a_star(val):
+            neighbors = get_neighbors(grid, pos)
+            neighbors = [neighbor for neighbor in neighbors if is_a_digit(neighbor)]
+            numbers = set()
+            if len(neighbors)>1:
+                for neighbor in neighbors:
+                    numbers.add(find_num(grid, neighbor))
+                if len(numbers) == 2:
+                    numbers = list(numbers)
+                    ratio = numbers[0] * numbers[1]
+                    total += ratio
+    
+    return total
+                
 def part1(filepath):
     '''
     Determines the sum of the part numbers in the engine schematic
@@ -112,4 +163,19 @@ def part1(filepath):
     print("Part 1:")
     print(f"The sum of the part numbers is {total}.")
 
+def part2(filepath):
+    '''
+    Determines the sum of the gear ratios in the engine schematic
+
+    >>> part2(test03_1)
+    Part 2:
+    The sum of the gear ratios is 467835.
+    '''
+    lines = read_input(filepath)
+    grid = get_grid(lines)
+    total = get_gears(grid)
+    print("Part 2:")
+    print(f"The sum of the gear ratios is {total}.")
+
 part1(filepath)
+part2(filepath)
