@@ -69,11 +69,13 @@ def get_nums(grid: grid) -> list[int]:
 
                 number += grid.get(current)
                 neighbors = get_neighbors(grid, current)
+                # filter for only the neighbors that are symbols
                 neighbors = [neighbor for neighbor in neighbors if is_a_symbol(grid[neighbor])]
 
                 for neighbor in neighbors:
                     all_neighbors.add(neighbor)
 
+                # cache the current position and set the new position
                 x, y = current
                 checked.add(current)
                 x += 1
@@ -93,7 +95,7 @@ def find_num(grid: grid, pos: coord) -> int:
     is_a_digit = lambda val: val in digits
     current = pos
 
-    # first move left to find the number
+    # first move left to find the number's starting position
     while grid.get(current) != None:
         current_val = grid.get(current)
         if is_a_digit(current_val):
@@ -137,8 +139,10 @@ def get_gears(grid: grid) -> int:
     for pos, val in grid.items():
         if is_a_star(val):
             neighbors = get_neighbors(grid, pos)
+            # filter for only the neighbors that are digits
             neighbors = [neighbor for neighbor in neighbors if is_a_digit(neighbor)]
             numbers = set()
+            # only interested in positions with at least two digit neighbors
             if len(neighbors)>1:
                 for neighbor in neighbors:
                     numbers.add(find_num(grid, neighbor))
