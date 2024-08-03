@@ -55,6 +55,7 @@ def find_location(seed: int, mapping:dict) -> int:
     35
     '''
     current = seed
+    
     for i, current_dict in enumerate(mapping):
         for org_val, dest_vals in current_dict.items():
             #print(current)
@@ -68,7 +69,32 @@ def find_location(seed: int, mapping:dict) -> int:
             else:
                 continue
     return current
-                
+
+
+def get_lowest_location(mapping: list[dict]):
+    '''
+    Gets the lowest location in the mapping
+    '''
+    locations = [i[0] for i in mapping[-1].values()]
+    return min(locations)
+
+def reverse_mapping(mapping: list[dict]):
+    '''
+    Reverse the mapping
+    '''
+    
+    reversed = []
+    N = len(mapping) - 1
+    for i in range(N, -1, -1):
+        reversed.append(dict())
+        for key in mapping[i].keys():
+            origin = key
+            dest, max_length = mapping[i][key]
+            reversed[-1][dest] = [origin, max_length]
+
+    return reversed
+
+
 def part1(filepath):
     '''
     Determines the lowest location number of the initial seed numbers
@@ -97,17 +123,32 @@ def part2(filepath):
     '''
     lines = read_input(filepath)
     seeds, mapping = get_mapping(lines)
-    location = 1000000000
+    #location = get_lowest_location(mapping) this was 324294414
+    location = 224294414
+    reversed_mapping = reverse_mapping(mapping)
+
+    result = -1
+    allowed = []
     for i, seed in enumerate(seeds):
-        if i%2 != 0:
+        if i%2!=0:
             continue
         else:
-            start, length = seed, seeds[i+1]
-            for seed_num in range(start, start+length):
-                location = min( location, find_location(seed_num, mapping))
+            allowed.append((seed, seeds[i+1]))
+    p = 200000000
+    found = -1
+    while p != 0:
+        target = find_location(location, reversed_mapping)
+        #print(location, target)
+        for pair in allowed:
+            if target >= pair[0] and target < pair[0] + pair[1]:
+                found = location
                 
+                break
+        location -= 1
+        p -= 1
+    
     print("Part 2:")
-    print(f"The lowest location number for the initial seeds is {location}.")
+    print(f"The lowest location number for the initial seeds is {found}.")
 
 part1(filepath)
 part2(filepath)
