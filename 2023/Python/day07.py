@@ -176,6 +176,51 @@ def convert_to_letters(hand: str) -> str:
         new_hand += sortable_values[card]
     return new_hand
 
+def get_joker_swaps(hand: str) -> str:
+    '''
+    We can now swap joker cards. Returns all possible permutations
+    '''
+    if "J" not in hand:
+        return [hand]
+
+    other_cards = "AKQT98765432"
+    hands = []
+
+    for i, card in enumerate(hand):
+        if card == "J":
+            for oc in other_cards:
+                new_hand = hand[:i] + oc + hand[i+1:]
+                hands.extend(get_joker_swaps(new_hand))
+    return hands
+
+
+
+def updated_convert_to_letters(hand: str) -> str:
+    '''
+    Converts the cards to letter values so we can sort them and returns the new hand
+
+    Usage example:
+    >>> updated_convert_to_letters("AAAAA")
+    'AAAAA'
+    >>> updated_convert_to_letters("AKQJT")
+    'ABCNE'
+    >>> updated_convert_to_letters("23456")
+    'MLKJI'
+    >>> updated_convert_to_letters("7893A")
+    'HGFLA'
+    '''
+
+    sortable_values = {"A": "A", "K": "B", "Q": "C", 
+        "T": "E", "9": "F", "8": "G", "7": "H",
+        "6": "I", "5": "J", "4": "K", "3": "L", "2": "M", "J": "N" }
+
+    new_hand = ""
+    for card in hand:
+        new_hand += sortable_values[card]
+    return new_hand
+
+
+
 def part1(filepath):
     '''
     Determines the total winnings for our hands and wagers of camel cards.
@@ -219,5 +264,55 @@ def part1(filepath):
     print("Part 1:")
     print(f"The total winnings are {total}.")
 
+def part2(filepath):
+    '''
+    Determines the total winnings for our hands and wagers of camel cards.
+
+    Usage example:
+    >>> part2(test07)
+    Part 2:
+    The total winnings are 5905.
+    '''
+
+    lines = read_input(filepath)
+    results = []
+
+    for line in lines:
+        original_hand, wager =  get_hand_and_wager(line)
+        converted_hand = updated_convert_to_letters(original_hand)
+        hands = [original_hand]
+        result = 10
+
+        if "J" in original_hand:
+            hands.extend(get_joker_swaps(original_hand))
+        for hand in hands:
+            if  five_of_a_kind(hand):
+                result = min(result, 0)
+            elif four_of_a_kind(hand):
+                result = min(result, 1)
+            elif full_house(hand):
+                result = min(result, 2)
+            elif three_of_a_kind(hand):
+                result = min(result, 3)
+            elif two_pair(hand):
+                result = min(result, 4)
+            elif one_pair(hand):
+                result = min(result, 5)
+            elif high_card(hand):
+                result = min(result, 6)
+        
+        result = [result]
+        result += [converted_hand, original_hand, wager]
+        results.append(result)
+    
+    results.sort(reverse=True)
+    total = 0
+    
+    for i, result in enumerate(results):
+        total += (i+1)*result[-1]
+    
+    print("Part 2:")
+    print(f"The total winnings are {total}.")
 
 part1(filepath)
+part2(filepath)
