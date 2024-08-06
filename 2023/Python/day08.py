@@ -1,3 +1,5 @@
+from functools import reduce
+
 filepath="..\\data\\input08.txt"
 test08 = "..\\test\\test08_1.txt"
 test08_2 = "..\\test\\test08_2.txt"
@@ -64,38 +66,67 @@ def part1(filepath):
     print("Part 1:")
     print(f"We arrive at {target} after {i} steps.")
 
+def gcd(x, y):
+    '''
+    Determines the greatest common denominator of x and y
+
+    Usage example:
+    >>> gcd(12, 18)
+    6
+    >>> gcd(54, 24)
+    6
+    '''
+
+    while (y):
+        x, y = y, x % y
+    return x
+
+def lcm(x, y):
+    '''
+    Determines the least common multiple of x and y
+
+    Usage example:
+    >>> lcm(54, 24)
+    216
+    >>> lcm(2, 3)
+    6
+    '''
+    g = gcd(x, y)
+    return x*y//g
+
+
+
 def part2(filepath):
     '''
     Calculates the number of steps requried to get all ghosts to stop at nodes ending in Z
-
+    
     Usage example:
     >>> part2(test08_3)
-    Part 1:
-    We arrive at ZZZ after 2 steps.
+    We have all ghosts on a node ending with Z after 6 steps.
     '''
 
     lines = read_input(filepath) 
     nodes, instructions = get_nodes(lines)
 
     start = [node for node in nodes.keys() if node[-1] == "A"]
-    target = [node for node in nodes.keys() if node[-1] == "Z"]
-    current = start
-
+    
     N = len(instructions)
-    i = 0
+    lengths = []
+    for pos in start:
+        i = 0
+        while pos[-1] != "Z":
+            instruction = instructions[i%N]
+            j = 1
+            if instruction == "L":
+                 j = 0
+            pos = nodes[pos][j]
+            i+=1  
+        lengths.append(i)
 
-    while current != target:
-        instruction = instructions[i%N]
-        j = 1
-        if instruction == "L":
-            j = 0
-        new_positions = []
-        for node in current:
-            new_positions.append(nodes[node][j])
-        i+=1
+    ans = reduce(lambda x, y: lcm(x, y), lengths)
     
     print("Part 2:")
-    print(f"We have all ghosts on a node ending with Z after {i} steps.")
+    print(f"We have all ghosts on a node ending with Z after {int(ans)} steps.")
 
 
 part1(filepath)
