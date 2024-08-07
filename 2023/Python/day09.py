@@ -60,8 +60,41 @@ def predict_next(numbers: list[int]) -> int:
         differences = get_differences(current)
         all_differences.append(differences)
         current = differences
-        
+
     return sum([numbers[-1] for numbers in all_differences])
+
+def predict_previous(numbers: list[int]) -> int:
+    '''
+    Predicts the previous value for the given list of numbers
+
+    Usage example:
+    >>> predict_previous([0, 3, 6, 9, 12, 15])
+    -3
+    >>> predict_previous([1, 3, 6, 10, 15, 21])
+    0
+    >>> predict_previous([10, 13, 16, 21, 30, 45])
+    5
+    '''
+
+    all_differences = [numbers]
+    current = numbers
+    not_zero = lambda x: x!= 0
+
+    while sum([not_zero(i) for i in current]) != 0:
+        differences = get_differences(current)
+        all_differences.append(differences)
+        current = differences
+
+    prev = 0
+    N = len(all_differences) -1
+    for i in range(N, 0, -1):
+        if i == N:
+            prev = 0
+        else:
+            prev = all_differences[i][0] - prev
+    
+    return all_differences[0][0] - prev
+    
 
 def part1(filepath):
     '''
@@ -76,11 +109,33 @@ def part1(filepath):
     lines = read_input(filepath)
     numbers = get_numbers(lines)
     predicted = []
+    
     for number in numbers:
         predicted.append(predict_next(number))
-    print(predicted)
+    
     print("Part 1:")
     print(f"The sum of the predicted values is {sum(predicted)}.")
 
+def part2(filepath):
+    '''
+    Calculates the sum of the previous values.
+
+    Usage example:
+    >>> part2(test09)
+    Part 2:
+    The sum of the previous values is 2.
+    '''
+
+    lines = read_input(filepath)
+    numbers = get_numbers(lines)
+    previous = []
+    
+    for number in numbers:
+        previous.append(predict_previous(number))
+    
+    print("Part 2:")
+    print(f"The sum of the previous values is {sum(previous)}.")
+
 
 part1(filepath)
+part2(filepath)
