@@ -87,13 +87,13 @@ def predict_previous(numbers: list[int]) -> int:
 
     prev = 0
     N = len(all_differences) -1
-    for i in range(N, 0, -1):
+    for i in range(N, -1, -1):
         if i == N:
             prev = 0
         else:
             prev = all_differences[i][0] - prev
     
-    return all_differences[0][0] - prev
+    return  prev
     
 
 def part1(filepath):
