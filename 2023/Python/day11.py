@@ -51,7 +51,7 @@ def find_empty_rows_cols(grid: dict[coord, int]) -> tuple[list[int], list[int]]:
 
 def insert_empty_spaces(grid: dict[coord, int]) -> dict[coord, int]: 
     '''
-    
+    Inserts empty cols from right to left and then the rows from bottom to top.
     '''
     N_rows = max(key[0] for key in grid.keys())+1
     N_cols = max(key[1] for key in grid.keys())+1
@@ -118,4 +118,31 @@ def part1(filepath):
     print("Part 1:")
     print(f"The sum of all distances is {total}.")
 
+def part2(filepath, dilation=1000000):
+    '''
+    Finds the distance between all pairs for the given dilation factor
+
+    Usage example:
+    >>> part2(test11, 10)
+    Part 2:
+    With the dilation factor of 10 the sum of distances becomes 1030.
+    >>> part2(test11, 100)
+    Part 2:
+    With the dilation factor of 100 the sum of distances becomes 8410.
+    '''
+    lines = read_input(filepath)
+    grid = get_grid(lines)
+    original_distances = find_dist(grid)
+    dilated_grid = insert_empty_spaces(grid)
+    dilated_distances = find_dist(dilated_grid)
+    original_dist = sum([val for key, val in original_distances.items()])
+    dilated_dist = sum([val for key, val in dilated_distances.items()])
+    diff = dilated_dist-original_dist
+    # our distance is a measured manhatten distance so we can just multiply the difference by the dilation factor -1
+    total = diff*(dilation-1) + original_dist
+    print("Part 2:")
+    print(f"With the dilation factor of {dilation} the sum of distances becomes {total}.")
+    
+
 part1(filepath)
+part2(filepath)
