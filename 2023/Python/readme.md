@@ -14,18 +14,18 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/5) | 2 | Seed ranges | ✔️ | Used bruteforce | |
 |  06 |  1   | Wait For It | ✔️ | How many ways to beat the distance | |
 | [url](https://adventofcode.com/2023/day/6) | 2 | A Longer race | ✔️ | see part 1 | |
-|  07 |  1   | Camel Cards |  | Notes | |
-| [url](https://adventofcode.com/2023/day/7) | 2 | Title  |  | Notes | |
-|  08 |  1   | Haunted Wasteland |  | Notes | |
-| [url](https://adventofcode.com/2023/day/8) | 2 | Title  |  | Notes | |
-|  09 |  1   | Mirage Maintenance |  | Notes | |
-| [url](https://adventofcode.com/2023/day/9) | 2 | Title  |  | Notes | |
-|  10 |  1   | Pipe Maze |  | Notes | |
-| [url](https://adventofcode.com/2023/day/10) | 2 | Title  |  | Notes | |
-|  11 |  1   | Cosmic Expansion |  | Notes | |
-| [url](https://adventofcode.com/2023/day/11) | 2 | Title  |  | Notes | |
-|  12 |  1   | Hot Springs |  | Notes | |
-| [url](https://adventofcode.com/2023/day/12) | 2 | Title  |  | Notes | |
+|  07 |  1   | Camel Cards | ✔️ | Poker with tie breakers so implement sorting | |
+| [url](https://adventofcode.com/2023/day/7) | 2 | Now with Jokers | ✔️ | modify the sorting function | |
+|  08 |  1   | Haunted Wasteland | ✔️ | Pipe network BFS | |
+| [url](https://adventofcode.com/2023/day/8) | 2 | Multiple positions at once | ✔️ | GCD, LCM | |
+|  09 |  1   | Mirage Maintenance | ✔️ | Find patterns in sequences and predict the next | |
+| [url](https://adventofcode.com/2023/day/9) | 2 | Title  | ✔️ | Predict the previous | |
+|  10 |  1   | Pipe Maze | ✔️ | Pathfinding through a network of pipes | |
+| [url](https://adventofcode.com/2023/day/10) | 2 | Title  |  | Changes the rules for the "pathfinding" | ✔️ |
+|  11 |  1   | Cosmic Expansion | ✔️ | Expand empty rows | |
+| [url](https://adventofcode.com/2023/day/11) | 2 | Title  | ✔️ | Use Manhattan distance  | |
+|  12 |  1   | Hot Springs | ✔️ | Generate patterns | |
+| [url](https://adventofcode.com/2023/day/12) | 2 | What if the patterns are very long  |  | Notes | ✔️ |
 |  13 |  1   | Point of Incidence |  | Notes | |
 | [url](https://adventofcode.com/2023/day/13) | 2 | Title  |  | Notes | |
 |  14 |  1   | Parabolic Reflector Dish |  | Notes | |
