@@ -56,5 +56,40 @@ def part1(filepath):
     print("Part 1:")
     print(f"The sum of the hashes is {total}.")
 
+def part2(filepath):
+    '''
+    Calculates the focussing power of the lens configuration.
+
+    Usage example:
+    >>> part2(test15)
+    Part 2:
+    The focussing power of the lens configuration is 145.
+    '''
+
+    lines = read_input(filepath)
+    lenses = [{} for _ in range(256)]
+    for line in lines:
+        if "=" in line:
+            label = line.split("=")[0]
+            index = generate_hash_value(label)
+            focal_length = int(line.split("=")[1])
+            lenses[index][label] = focal_length
+
+        else:
+            label = line.split("-")[0]
+            index = generate_hash_value(label)
+            if label in lenses[index]:
+                lenses[index].pop(label)
+    
+    total = 0
+    for i, box in enumerate(lenses):
+        for j, slot in enumerate(box.keys()):
+            total += (i+1)*(j+1)*box[slot]
+    
+    print("Part 2:")
+    print(f"The focussing power of the lens configuration is {total}.")
+    
+    
 
 part1(filepath)
+part2(filepath)
