@@ -1,1 +1,1 @@
-seed, seeds[i+1]
+new_coord, new_heading
