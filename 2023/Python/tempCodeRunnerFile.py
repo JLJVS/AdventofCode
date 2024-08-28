@@ -1,1 +1,2 @@
-new_coord, new_heading
+ # x, y = c
+            # dx, dy = h

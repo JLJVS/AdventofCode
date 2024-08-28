@@ -27,62 +27,52 @@ def get_grid(lines: list[str]) -> Grid:
 
     return grid
 
-def split_vertical(coord: Coord, grid: Grid) -> List[tuple[Coord, Heading]]:
+def split_vertical(coord: Coord, grid: Grid) -> List[Tuple[Coord, Heading]]:
     '''
     when approaching a | from the left or the right
     '''
-    x, y = coord
-    above = (x, y-1)
-    below = (x, y+1)
-    allowed = [i for i in [(above, (0, -1)),(below, (0, 1))] if i[0] in grid.keys()]
-    return allowed
+    return [(coord, (0, -1)), (coord, (0, 1))]
+    
 
-def split_horizontal(coord: Coord, grid: Grid) -> List[tuple[Coord, Heading]]:
+def split_horizontal(coord: Coord, grid: Grid) -> List[Tuple[Coord, Heading]]:
     '''
     when approaching a - from below or above
     '''
-    x, y = coord
-    left = (x-1, y)
-    right = (x+1, y)
-    allowed = [i for i in [(left, (-1, 0)),(right, (1, 0))] if i[0] in grid.keys()]
-    return allowed
+    return [(coord, (-1, 0)), (coord, (1, 0))]
+    
 
-def mirror_right(coord: Coord, heading: Heading, grid: Grid) -> tuple[Coord, Heading]:
+def mirror_right(coord: Coord, heading: Heading, grid: Grid) -> Tuple[Coord, Heading]:
     '''
     mirror right /
     '''
     x, y = coord
-    new_coord, new_heading = coord, heading
+    new_heading = coord, heading
     if heading == (1, 0):
-        new_coord, new_heading = (x, y-1), (0, -1)
+        new_heading = (0, -1)
     elif heading == (-1, 0):
-        new_coord, new_heading = (x, y+1), (0, 1)
+        new_heading = (0, 1)
     elif heading == (0, 1):
-        new_coord, new_heading = (x-1, y), (-1, 0)
+        new_heading = (-1, 0)
     else:
-        new_coord, new_heading = (x+1, y), (1, 0)
-    if new_coord in grid.keys():
-        return [(new_coord, new_heading)]
-    return [(coord, heading)]
+        new_heading = (1, 0)
+    return [(coord, new_heading)]
     
 def mirror_left(coord: Coord, heading: Heading, grid: Grid) -> Tuple[Coord, Heading]:
     '''
     mirror left \
     '''
-    x, y = coord
-    new_coord, new_heading = coord, heading
+    
+    new_heading = heading
     if heading == (1, 0):
-        new_coord, new_heading = (x, y+1), (0, 1)
+        new_heading = (0, 1)
     elif heading == (-1, 0):
-        new_coord, new_heading = (x, y-1), (0, -1)
+        new_heading = (0, -1)
     elif heading == (0, 1):
-        new_coord, new_heading = (x+1, y), (1, 0)
+        new_heading = (1, 0)
     else:
-        new_coord, new_heading = (x-1, y), (-1, 0)
+        new_heading = (-1, 0)
 
-    if new_coord in grid.keys():
-        return [(new_coord, new_heading)]
-    return [(coord, heading)]
+    return [(coord, new_heading)]
     
 
 def move(coord: Coord, heading: Heading, grid: Grid) -> List[Tuple[Coord, Heading]]:
@@ -119,19 +109,37 @@ def visit_all(start: Coord, grid: Grid, heading=(1,0), ):
     '''    
     visited = set()
     current = [(start, heading)]
-    for i in range(10):
+    for _ in range(800):
         new_pos = []
-        print(current)
         for pos in current:
-            print(i, pos)
+            #print(i, pos)
             c, h = pos
+            # x, y = c
+            # dx, dy = h
             new_pos += move(c, h, grid)
-        current = new_pos
+            # if new_pos[-1][0] != (x+dx, y+dy):
+            #     visited.add(((x+dx, y+dy), (0, 0)))
+            visited.add(pos)
+        current = [i for i in list(set(new_pos)) if i[0] in grid.keys()]
+    
+    sorted_visited = [i for i in set([i[0] for i in visited if i[0] in grid.keys()]) ] 
+    sorted_visited.sort()
+    print(sorted_visited)
+    return len(sorted_visited)
 
+def part1(filepath):
+    '''
+    Calculates how many tiles end up being energized
 
-lines = read_input(test16)
-print(len(lines[0]), len(lines))
-for line in lines:
-    print(line)
-grid = get_grid(lines)
-visit_all((0,0), grid, (1,0))
+    Usage example:
+    >>> part1(test16)
+    Part 1:
+    46 tiles become energized.
+    '''
+    lines = read_input(filepath)
+    grid = get_grid(lines)
+    energized = visit_all((0,0), grid, (1, 0))
+    print("Part 1:")
+    print(f"{energized} tiles become energized.")
+
+part1(filepath)
