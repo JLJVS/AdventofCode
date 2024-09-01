@@ -46,27 +46,46 @@ def get_to_fill(grid:Grid) -> int:
     x_max = max([i[0] for i in grid])
     y_min = min([i[1] for i in grid])
     y_max = max([i[1] for i in grid])
-    to_fill = 0
-    pattern = "#+\.*#"
-
+    
+    complete_grid = dict()
     for y in range(y_min, y_max+1):
         to_print = ""
         for x in range(x_min, x_max+1):
             coord = (x, y)
+            complete_grid[coord] = 0
             if coord in grid:
                 to_print += "#"
+                complete_grid[coord] = 1
             else:
                 to_print += "."
-        print(to_print)
-        holes = re.findall(pattern, to_print)
-        for hole in holes:
-            hole = hole.replace("#", "")
-            to_fill += len(hole)
-        print(holes)
-        
-       
-    return to_fill+len(grid)
+    
+    empty_spaces = []
+    visited = set()
 
+    # use a BFS approach to get all connected empty spaces
+    for coord in complete_grid:
+        if complete_grid[coord] == 0 and coord not in visited:
+            visited.add(coord)
+            pool = [coord]
+            
+            current = [coord]
+            while current:
+                next = []
+                for c in current:
+                    x, y = c
+                    neighbors = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+                    for neighbor in neighbors:
+                        if neighbor not in visited and complete_grid.get(neighbor) == 0:
+                            next.append(neighbor)
+                            pool.append(neighbor)
+                            visited.add(neighbor)
+                current = next
+            empty_spaces.append(pool)
+
+    # assume the largest cavity is the cavity inside
+    main_cavity_size = max([len(i) for i in empty_spaces])
+    cavity_walls  = len(grid)
+    return main_cavity_size+cavity_walls
 
 
 def part1(filepath):
