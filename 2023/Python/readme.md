@@ -30,14 +30,14 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/13) | 2 | Title  |  | Notes | |
 |  14 |  1   | Parabolic Reflector Dish |  | Notes | |
 | [url](https://adventofcode.com/2023/day/14) | 2 | Title  |  | Notes | |
-|  15 |  1   | Lens Library |  | Notes | |
-| [url](https://adventofcode.com/2023/day/15) | 2 | Title  |  | Notes | |
-|  16 |  1   | The Floor Will Be Lava |  | Notes | |
-| [url](https://adventofcode.com/2023/day/16) | 2 | Title  |  | Notes | |
+|  15 |  1   | Lens Library | ✔️ | Write your own hash function | |
+| [url](https://adventofcode.com/2023/day/15) | 2 | Hash collisions  | ✔️ | how to handle hash collisions | |
+|  16 |  1   | The Floor Will Be Lava | ✔️ | Work out the beam path | |
+| [url](https://adventofcode.com/2023/day/16) | 2 | Find the best starting position  | ✔️ | more of part 1 | |
 |  17 |  1   | Clumsy Crucible |  | Notes | |
 | [url](https://adventofcode.com/2023/day/17) | 2 | Title  |  | Notes | |
-|  18 |  1   | Lavaduct Lagoon |  | Notes | |
-| [url](https://adventofcode.com/2023/day/18) | 2 | Title  |  | Notes | |
+|  18 |  1   | Lavaduct Lagoon | ✔️ | Folow the instructions and find the enclosed space (BFS) | |
+| [url](https://adventofcode.com/2023/day/18) | 2 | increase the spaces enough to make BFS non feasible  |  | Notes | |
 |  19 |  1   | Aplenty |  | Notes | |
 | [url](https://adventofcode.com/2023/day/19) | 2 | Title  |  | Notes | |
 |  20 |  1   | Pulse Propagation |  | Notes | |
