@@ -110,4 +110,28 @@ def part1(filepath):
     print("Part 1:")
     print(f"By following the dig plan we can hold {to_fill} cubic meters.")
 
+def part2(filepath):
+    '''
+    
+    '''
+    lines = read_input(filepath)
+
+    grid = {(0,0): "#"}
+    directions = {0: "R", 1: "D", 2: "L", 3: "U"}
+    current = (0,0)
+    for line in lines:
+        _, _, color = get_directions(line)
+        color = color.upper()
+        print(color)
+        steps = int(color[2:-2], 16)
+        direction = directions[int(color[-2], 16)]
+        print(direction, steps)
+        grid , current = dig(current, direction, steps, grid)
+    
+    to_fill = get_to_fill(grid)
+    print("Part 2:")
+    print(f"By following the dig plan we can hold {to_fill} cubic meters.")
+
+
 part1(filepath)
+part2(test18)
