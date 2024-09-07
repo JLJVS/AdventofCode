@@ -1,4 +1,4 @@
-
+from itertools import combinations
 from typing import List, Dict, Tuple
 
 filepath = "..\\data\\input25.txt"
@@ -41,49 +41,77 @@ def cut_connection(network, edge):
     
     #print(edge)
     origin, destination = edge[0], edge[1]
-    network[origin].remove(destination)
-    network[destination].remove(origin)
+    if destination in network[origin]:
+        network[origin].remove(destination)
+    if origin in network[destination]:
+        network[destination].remove(origin)
     
     return network
 
 
-def find_networks(network, edge):
+def find_networks(network, edges):
     '''
     Cuts the given edge out of the network and finds the newly formed networks
+
+    Usage example:
+    find_networks(network, [("nvd", "jqt"), ("hfx", "pzl"), ("bvb", "cmg")])
+    [6, 9]
     '''
 
     new_networks = []
-    network = cut_connection(network, edge)
+    
+    for edge in edges:
+        network = cut_connection(network, edge)
+    
     nodes = [i for i in network.keys()]
     nodes_visited = set()
     visited = set()
+
     for node in nodes:
+        if len(visited) == len(network):
+            ans = [len(i) for i in new_networks]
+            ans.sort()
+            return ans
         if node in visited:
             #print("Already visited")
             continue
+
         current = [node]
+        current_visited = set()
+
         while current:
-            #print(current, visited)
             next = []
+            
             for n in current:
                 if n not in visited:
                     visited.add(n)
+                    current_visited.add(n)
                     next += network[n]
+            
             current = next
-        if len(visited) == len(network):
-            return [len(visited)]
+        
         nodes_visited.update(visited)
-        new_networks.append(visited)
-    print(new_networks)
-    return [len(i) for i in new_networks]
+        new_networks.append(current_visited)
+    ans = [len(i) for i in new_networks]
+    ans.sort()
+    return ans
 
 
 
 
-lines = read_input(test25)
+lines = read_input(filepath)
 network, edges = create_network(lines)
+edge_combinations = combinations(edges, 3)
+
+for ec in edge_combinations:
+    #print(ec)
+    #print([len(v) for _, v in network.items()])
+    net = {k:v[::] for k,v in network.items()}
+    ns = find_networks(net, ec)
+    if len(ns) > 1:
+        print(ns)
+    
 #print(network)
 #for edge in edges:
 #    print(edge)
 #    print(find_networks(network, edge))
-print(find_networks(network, ("nvd", "jqt")))
