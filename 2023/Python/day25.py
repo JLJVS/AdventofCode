@@ -1,8 +1,11 @@
 from itertools import combinations
 from typing import List, Dict, Tuple
 
+import networkx as nx
+
 filepath = "..\\data\\input25.txt"
 test25 = "..\\test\\test25_1.txt" 
+
 
 
 def read_input(filepath) -> list[str]:
@@ -51,7 +54,9 @@ def cut_connection(network, edge):
 
 def find_networks(network, edges):
     '''
-    Cuts the given edge out of the network and finds the newly formed networks
+    Cuts the given edge out of the network and finds the newly formed networks.
+
+    IMPORTANT: This works on the test case but doesn't converge even after 2 days on the real input 
 
     Usage example:
     find_networks(network, [("nvd", "jqt"), ("hfx", "pzl"), ("bvb", "cmg")])
@@ -96,22 +101,46 @@ def find_networks(network, edges):
     ans.sort()
     return ans
 
+def convert_to_graph(network: dict):
+    '''
+    Convert our nextwork to a networkx graph object
+    '''
+
+    g = nx.Graph()
+
+    for node in network:
+        other_nodes = network[node]
+        for other_node in other_nodes:
+            g.add_edge(node, other_node)
+    return g
 
 
+def part1(filepath):
+    '''
+    Calculates the product of the network sizes from the original network by cutting 3 edges.
+    Uses networkx given that own implementation doesn't converge within 2 days.
 
-lines = read_input(filepath)
-network, edges = create_network(lines)
-edge_combinations = combinations(edges, 3)
-
-for ec in edge_combinations:
-    #print(ec)
-    #print([len(v) for _, v in network.items()])
-    net = {k:v[::] for k,v in network.items()}
-    ns = find_networks(net, ec)
-    if len(ns) > 1:
-        print(ns)
+    Usage example:
+    >>> part1(test25):
+    Part 1:
+    The product of the resulting graph is 54.
+    '''
     
-#print(network)
-#for edge in edges:
-#    print(edge)
-#    print(find_networks(network, edge))
+    lines = read_input(filepath)
+    network, edges = create_network(lines)
+    g = convert_to_graph(network)
+
+    # determine the 3 edges to cut 
+    to_cut = nx.minimum_edge_cut(g)
+    # print(to_cut)
+
+    # cut the edges
+    g.remove_edges_from(to_cut)
+
+    # get the newly formed networks
+    new_networks = nx.connected_components(g)
+    a, b = [len(i) for i in new_networks]
+    print("Part 1:")
+    print(f"The product of the resulting graph is {a*b}.")
+
+part1(filepath)
