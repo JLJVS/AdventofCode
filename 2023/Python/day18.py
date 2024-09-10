@@ -88,6 +88,8 @@ def get_to_fill(grid:Grid) -> int:
     return main_cavity_size+cavity_walls
 
 
+
+
 def part1(filepath):
     '''
     
@@ -103,7 +105,7 @@ def part1(filepath):
 
     current = (0,0)
     for line in lines:
-        direction, steps, color = get_directions(line)
+        direction, steps, _ = get_directions(line)
         grid , current = dig(current, direction, steps, grid)
     
     to_fill = get_to_fill(grid)
@@ -112,26 +114,34 @@ def part1(filepath):
 
 def part2(filepath):
     '''
-    
+    https://en.wikipedia.org/wiki/Shoelace_formula
     '''
     lines = read_input(filepath)
 
-    grid = {(0,0): "#"}
+    points = [(0,0)]
     directions = {0: "R", 1: "D", 2: "L", 3: "U"}
+    changes = {"R": [1, 0], "D": [0, 1],
+               "L": [-1, 0], "U": [0, -1]}
     current = (0,0)
+    total_steps = 0
     for line in lines:
         _, _, color = get_directions(line)
         color = color.upper()
-        print(color)
         steps = int(color[2:-2], 16)
+        total_steps += steps
         direction = directions[int(color[-2], 16)]
-        print(direction, steps)
-        grid , current = dig(current, direction, steps, grid)
+        x, y = current
+        dx, dy = changes[direction]
+        current = (x + steps*dx, y + steps*dy)
+        points.append(current)
+        
     
-    to_fill = get_to_fill(grid)
+    to_fill = abs(sum(points[i][0] * (points[i - 1][1] - points[(i + 1) % len(points)][1]) for i in range(len(points))))//2
+    to_fill -= total_steps // 2 
+    
     print("Part 2:")
-    print(f"By following the dig plan we can hold {to_fill} cubic meters.")
+    print(f"By following the dig plan we can hold {to_fill + total_steps + 1} cubic meters.")
 
 
 part1(filepath)
-part2(test18)
+part2(filepath)
