@@ -50,5 +50,5 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/23) | 2 | Title  |  | Notes | |
 |  24 |  1   | Never Tell Me The Odds |  | Notes | |
 | [url](https://adventofcode.com/2023/day/24) | 2 | Title  |  | Notes | |
-|  25 |  1   | Snowverload |  | Notes | |
+|  25 |  1   | Snowverload | ✔️ | Graph Problem | ✔️ |
 | [url](https://adventofcode.com/2023/day/25) | 2 | Title  |  | Notes | |
