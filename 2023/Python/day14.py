@@ -29,24 +29,29 @@ def tilt_north(grid: Grid) -> Grid:
     '''
     Tilts the bord to the north untill all the round rocks have settled
     '''
-    allowed = set(grid.keys())
+    allowed = [i for i in grid.keys()]
+    allowed.sort()
     max_y = max(i[1] for i in allowed)
     #print(max_y)
-    N = max_y*10 # we need to be sure that all the rocks have settled
+    N = max_y*3 # we need to be sure that all the rocks have settled
+    
     for _ in range(N):
         new_grid = dict()
-        round_rocks = [coord for coord, val in grid.items() if val == "O"]
-        cube_rocks =  [coord for coord, val in grid.items() if val == "#"]
-        for c in round_rocks:
+        # first check if the rocks move
+        for c in allowed:
             x, y = c
-            new_c = (x, y-1)
-            if grid.get(new_c) == ".":
-                new_grid[new_c] = "O"
-            else:
-                new_grid[c] = "O"
-        for c in cube_rocks:
-            new_grid[c] = "#"
-        for c in new_grid:
+            above = (x, y-1)
+            # cube rocks
+            if grid[c] == "#":
+                new_grid[c] = "#"
+            # rounded rocks
+            elif grid[c] == "O":
+                if grid.get(above) == ".":
+                    new_grid[above] = "O"
+                else:
+                    new_grid[c] = "O"
+        # fill the empty spaces
+        for c in allowed:
             if c not in new_grid:
                 new_grid[c] = "."
         grid = new_grid
@@ -60,14 +65,25 @@ def calculate_load(grid: Grid) -> int:
     rounded_rocks = [coord for coord, val in grid.items() if val == "O"]
     load = 0
     for rock in rounded_rocks:
-        load += N - rock[1]
+        load += (N+1 - rock[1])
     return load
 
+def part1(filepath):
+    '''
+    Calculates the total load on the north support beams
+
+    Usage example:
+    >>> part1(test14)
+    Part 1:
+    The total load on the north support beams is 136.
+    '''
+
+    lines = read_input(filepath)
+    grid = get_grid(lines)
+    tilted_grid = tilt_north(grid)
+    total_load = calculate_load(tilted_grid)
+    print("Part 1:")
+    print(f"The total load on the north support beams is {total_load}.")
 
 
-lines = read_input(test14)
-grid = get_grid(lines)
-#print(grid)
-
-tilted_grid = tilt_north(grid)
-print(calculate_load(tilted_grid))
+part1(filepath)
