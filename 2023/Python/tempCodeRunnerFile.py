@@ -1,2 +1,1 @@
- # x, y = c
-            # dx, dy = h
+dx, dy
