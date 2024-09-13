@@ -1,1 +1,2 @@
-dx, dy
+if key in seen:
+    #     continue

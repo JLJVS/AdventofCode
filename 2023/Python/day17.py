@@ -24,60 +24,67 @@ def get_grid(lines: List[str]) -> Grid:
             grid[(x,y)] = int(val)
     return grid
 
+def part1(filepath):
+    '''
+    Finds the lowest heat loss possible to get to the destination
 
-lines = read_input(test17)
-for line in lines:
-    print(line)
-grid = get_grid(lines)
-print(grid)
+    Usage example:
+    >>> part1(test17)
+    Part 1:
+    The least heat loss we can occur is: 102.
+    '''
+    lines = read_input(filepath)
+    grid = get_grid(lines)
 
-target_x = max([i[0] for i in grid])
-target_y = max([i[1] for i in grid])
-target = (target_x, target_y)
+    target_x = max([i[0] for i in grid])
+    target_y = max([i[1] for i in grid])
+    target = (target_x, target_y)
 
-seen = set()
-visited = dict()
-allowed = set(i for i in grid.keys())
+    seen = set()
+    visited = dict()
+    visited[(0,0)] = 0
+    allowed = set(i for i in grid.keys())
 
-# current is the queue with the following state
-# current heat loss, coord, direction, steps
-current = [(0, (0, 0), (0, 1), 0), (0, (0, 0), (1, 0), 0)]
-visited[(0,0)] = 0
-while current:
-    print(current)
-    heat_loss, coord, direction, steps = heappop(current)
-    x, y = coord
-    dx, dy = direction
+    # current is the queue with the following state
+    # current heat loss, coord, direction, steps
+    current = [(0, (0, 0), (0, 1), 0), (0, (0, 0), (1, 0), 0)]
 
-    key = (x, y, dx, dy, steps)
-    if key in seen:
-        continue
-    seen.add(key)
 
-    # first check if we can continue in the same direction
-    if steps < 3:
-        new_x, new_y = x+dx, y+dy
-        
-        extra_loss = grid.get((new_x, new_y))
-        if extra_loss:
-            heappush(current, (heat_loss + extra_loss, (new_x, new_y), (direction), steps+1))
+    while current:
+        heat_loss, coord, direction, steps = heappop(current)
+        x, y = coord
+        dx, dy = direction
 
-    for new_direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-        # pass if it's the same direction
-        if new_direction not in [(dx, dy), (-dx, -dy)]:
-            new_dx, new_dy = new_direction
-            new_x, new_y = x + new_dx, y + new_dy
+        key = (x, y, dx, dy, steps)
+        if key in seen:
+            continue
+        seen.add(key)
 
-            if (new_x, new_y) not in allowed:
-                continue
+        # first check if we can continue in the same direction
+        if steps < 3:
+            new_x, new_y = x+dx, y+dy
+            
             extra_loss = grid.get((new_x, new_y))
-            new_loss = heat_loss + extra_loss
-            # pass if the locations is already visited with a lower cost
-            known_loss = visited.get((new_x, new_y), -1)
-            if new_loss > known_loss and known_loss != -1:
-                continue
-            else:
-                visited[(new_x, new_y)] = new_loss
-                heappush(current, (heat_loss+ new_loss, (new_x, new_y), new_direction, 1))
+            if extra_loss:
+                heappush(current, (heat_loss + extra_loss, (new_x, new_y), (direction), steps+1))
 
-print(visited)
+        for new_direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            # pass if it's the same direction
+            if new_direction not in [(dx, dy), (-dx, -dy)]:
+                new_dx, new_dy = new_direction
+                new_x, new_y = x + new_dx, y + new_dy
+
+                if (new_x, new_y) in allowed:
+                    extra_loss = grid.get((new_x, new_y))
+                    new_loss = heat_loss + extra_loss
+                    # pass if the locations is already visited with a lower cost
+                    known_loss = visited.get((new_x, new_y), -1)
+                    if new_loss < known_loss or known_loss == -1:
+                        visited[(new_x, new_y)] = new_loss
+                        heappush(current, (heat_loss+ extra_loss, (new_x, new_y), new_direction, 1))
+    print(visited)
+    print("Part 1:")
+    print(f"The least heat loss we can occur is: {visited[target]}.")
+
+
+part1(filepath)
