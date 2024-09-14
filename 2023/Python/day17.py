@@ -40,7 +40,6 @@ def part1(filepath):
     target_y = max([i[1] for i in grid])
     target = (target_x, target_y)
 
-    seen = set()
     visited = dict()
     visited[(0,0)] = 0
     allowed = set(i for i in grid.keys())
@@ -54,37 +53,39 @@ def part1(filepath):
         heat_loss, coord, direction, steps = heappop(current)
         x, y = coord
         dx, dy = direction
-
-        key = (x, y, dx, dy, steps)
-        if key in seen:
-            continue
-        seen.add(key)
-
+        new_x, new_y = x+dx, y+dy
+        
         # first check if we can continue in the same direction
         if steps < 3:
-            new_x, new_y = x+dx, y+dy
-            
-            extra_loss = grid.get((new_x, new_y))
-            if extra_loss:
+            if (new_x, new_y) in allowed:
+                extra_loss = grid.get((new_x, new_y))
                 heappush(current, (heat_loss + extra_loss, (new_x, new_y), (direction), steps+1))
 
         for new_direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            # pass if it's the same direction
-            if new_direction not in [(dx, dy), (-dx, -dy)]:
+            # pass if it's the same direction or backwards
+            if new_direction != (dx, dy):
                 new_dx, new_dy = new_direction
                 new_x, new_y = x + new_dx, y + new_dy
 
                 if (new_x, new_y) in allowed:
-                    extra_loss = grid.get((new_x, new_y))
+                    extra_loss = grid[(new_x, new_y)]
                     new_loss = heat_loss + extra_loss
                     # pass if the locations is already visited with a lower cost
                     known_loss = visited.get((new_x, new_y), -1)
-                    if new_loss < known_loss or known_loss == -1:
+                    # not known yet
+                    if known_loss == -1:
                         visited[(new_x, new_y)] = new_loss
-                        heappush(current, (heat_loss+ extra_loss, (new_x, new_y), new_direction, 1))
+                        heappush(current, (new_loss, (new_x, new_y), new_direction, 1))
+                    # lower loss
+                    elif new_loss < known_loss:
+                        visited[(new_x, new_y)] = new_loss
+                        heappush(current, (new_loss, (new_x, new_y), new_direction, 1))
     print(visited)
+    print(set([i[0] for i in grid.keys()]))
+    print(target)
     print("Part 1:")
     print(f"The least heat loss we can occur is: {visited[target]}.")
 
 
 part1(filepath)
+
