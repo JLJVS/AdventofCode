@@ -36,6 +36,7 @@ def part1(filepath):
     lines = read_input(filepath)
     grid = get_grid(lines)
 
+    # the target destination is on the bottom right of the grid
     target_x = max([i[0] for i in grid])
     target_y = max([i[1] for i in grid])
     target = (target_x, target_y)
@@ -46,7 +47,7 @@ def part1(filepath):
 
     # current is the queue with the following state
     # current heat loss, coord, direction, steps
-    current = [(0, (0, 0), (0, 1), 0), (0, (0, 0), (1, 0), 0)]
+    current = [(0, (0, 0), (0, 0), 0)]
 
 
     while current:
@@ -63,7 +64,8 @@ def part1(filepath):
 
         for new_direction in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             # pass if it's the same direction or backwards
-            if new_direction != (dx, dy):
+            if new_direction not in  [(dx, dy), (-dx, -dy)]:
+                
                 new_dx, new_dy = new_direction
                 new_x, new_y = x + new_dx, y + new_dy
 
@@ -72,16 +74,19 @@ def part1(filepath):
                     new_loss = heat_loss + extra_loss
                     # pass if the locations is already visited with a lower cost
                     known_loss = visited.get((new_x, new_y), -1)
+                    new_key = (new_loss, (new_x, new_y), new_direction, 1)
                     # not known yet
                     if known_loss == -1:
                         visited[(new_x, new_y)] = new_loss
-                        heappush(current, (new_loss, (new_x, new_y), new_direction, 1))
+                        heappush(current, new_key)
                     # lower loss
                     elif new_loss < known_loss:
                         visited[(new_x, new_y)] = new_loss
-                        heappush(current, (new_loss, (new_x, new_y), new_direction, 1))
-    print(visited)
-    print(set([i[0] for i in grid.keys()]))
+                        heappush(current, new_key)
+        
+        
+    print(visited[target[0]-1, target[1] -1])
+    
     print(target)
     print("Part 1:")
     print(f"The least heat loss we can occur is: {visited[target]}.")
