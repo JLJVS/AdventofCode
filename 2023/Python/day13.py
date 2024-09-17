@@ -31,7 +31,7 @@ def find_horizontal_mirror(grid):
     mirror_indices = []
     N = len(grid)
     for row in grid:
-        possible = []
+        possible = set()
         for x, _ in enumerate(row):
             if x == 0 or x == N:
                 continue
@@ -44,13 +44,14 @@ def find_horizontal_mirror(grid):
                 elif N_left > N_right:
                     left = left[:N_right]
                 if left==right:
-                    possible.append(x)
+                    possible.add(x)
         
         mirror_indices.append(possible)
-    for possible in mirror_indices[0]:
-        result = map((lambda y: possible in y), mirror_indices[1:])
-        if result:
-            return possible
+    result = mirror_indices[0]
+    for p in mirror_indices[1:]:
+        result = result.intersection(p)
+    if len(result) == 1:
+        return list(result)[0]
     return 0
 
 def find_vertical_mirror(grid):
@@ -91,8 +92,9 @@ def part1(filepath):
     for grid in grids:
         rows_above = find_vertical_mirror(grid)
         cols_to_the_left = find_horizontal_mirror(grid)
-        total += cols_to_the_left + 100*rows_above
-        print(total)
+        total += cols_to_the_left
+        total += 100*rows_above
+        
     print("Part 1:")    
     print(f"We get {total} after summarizing.")
 
