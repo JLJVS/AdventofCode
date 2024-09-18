@@ -75,6 +75,60 @@ def find_vertical_mirror(grid):
 
     return 0
 
+def find_horizontal_mirror_smudge(grid):
+    '''
+    '''
+    mirror_indices = []
+    N = len(grid)-1
+    for row in grid:
+        possible = set()
+        for x, _ in enumerate(row):
+            if x == 0 or x == N:
+                continue
+            else:
+                left = row[:x][::-1]
+                right = row[x:]
+                N_left, N_right = len(left), len(right)
+                if N_left < N_right:
+                    right = right[:N_left]
+                elif N_left > N_right:
+                    left = left[:N_right]
+                differences = [1 if a!=b else 0 for (a,b) in zip(left, right) ]
+                
+                if sum(differences)==1:
+                    possible.add(x)
+        
+        mirror_indices.append(possible)
+    result = mirror_indices[0]
+    for p in mirror_indices[1:]:
+        result = result.intersection(p)
+    if len(result) == 1:
+        return list(result)[0]
+    return 0
+
+def find_vertical_mirror_smudge(grid):
+    '''
+    Our mirror has to be at least on row number 1 so if we return 0 there was no mirror.
+    '''
+
+    N = len(grid)
+    for row in range(1, N):
+        above = grid[:row][::-1]
+        below = grid[row:]
+
+        # make above and below the same length/trim
+        trim_length = len(below)
+        above = above[:trim_length]
+        trim_length = len(above)
+        below = below[:trim_length]
+        
+        differences = [1  if a!=b else 0 for (a,b) in zip(above, below)]
+        if sum(differences)==1:
+            return row
+
+    return 0
+
+
 def part1(filepath):
     '''
     Gets the result of summarizing our notes
@@ -98,5 +152,29 @@ def part1(filepath):
     print("Part 1:")    
     print(f"We get {total} after summarizing.")
 
-part1(filepath)
+def part2(filepath):
+    '''
+    Gets the result of summarizing our notes
+    
+    Usage example:
+    >>> part2(test13)
+    Part 2:
+    We get 400 after summarizing.
+    '''
+    lines = read_input(filepath)
+    grids = get_grids(lines)
 
+    total = 0
+
+    for grid in grids:
+        rows_above = find_vertical_mirror_smudge(grid)
+        cols_to_the_left = find_horizontal_mirror_smudge(grid)
+        total += cols_to_the_left
+        print(total)
+        total += 100*rows_above
+        print(total)
+    print("Part 2:")    
+    print(f"We get {total} after summarizing.")
+
+part1(filepath)
+part2(test13)
