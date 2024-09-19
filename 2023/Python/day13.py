@@ -128,6 +128,34 @@ def find_vertical_mirror_smudge(grid):
 
     return 0
 
+def replace_smudge(row, index_to_switch):
+    '''
+    Swaps a entry in a row
+    '''
+    new_row = row[:index_to_switch]
+    if row[index_to_switch]=="#":
+        new_row += "."
+    else:
+        new_row += "#"
+    return new_row + row[index_to_switch+1:]
+
+def find_smudge(grid):
+    '''
+    '''
+    x_max = len(grid[0])
+    y_max = len(grid)
+
+    for y in range(y_max):
+        for x in range(x_max):
+            new_grid = grid[:y]
+            new_grid.append(replace_smudge(grid[y], x))
+            new_grid += grid[y+1:]
+            rows_above = find_vertical_mirror(new_grid)
+            cols_to_the_left = find_horizontal_mirror(new_grid)
+            if rows_above != 0 or cols_to_the_left != 0:
+                return new_grid
+    return grid 
+    
 
 def part1(filepath):
     '''
@@ -167,8 +195,9 @@ def part2(filepath):
     total = 0
 
     for grid in grids:
-        rows_above = find_vertical_mirror_smudge(grid)
-        cols_to_the_left = find_horizontal_mirror_smudge(grid)
+        new_grid = find_smudge(grid)
+        rows_above = find_vertical_mirror(new_grid)
+        cols_to_the_left = find_horizontal_mirror(new_grid)
         total += cols_to_the_left
         print(total)
         total += 100*rows_above
@@ -178,3 +207,4 @@ def part2(filepath):
 
 part1(filepath)
 part2(test13)
+
