@@ -26,7 +26,7 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/11) | 2 | Title  | ✔️ | Use Manhattan distance  | |
 |  12 |  1   | Hot Springs | ✔️ | Generate patterns | |
 | [url](https://adventofcode.com/2023/day/12) | 2 | What if the patterns are very long  |  | Notes | ✔️ |
-|  13 |  1   | Point of Incidence |  | Notes | |
+|  13 |  1   | Point of Incidence | ✔️ | Notes | |
 | [url](https://adventofcode.com/2023/day/13) | 2 | Title  |  | Notes | |
 |  14 |  1   | Parabolic Reflector Dish |  | Notes | |
 | [url](https://adventofcode.com/2023/day/14) | 2 | Title  |  | Notes | |
@@ -34,7 +34,7 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/15) | 2 | Hash collisions  | ✔️ | how to handle hash collisions | |
 |  16 |  1   | The Floor Will Be Lava | ✔️ | Work out the beam path | |
 | [url](https://adventofcode.com/2023/day/16) | 2 | Find the best starting position  | ✔️ | more of part 1 | |
-|  17 |  1   | Clumsy Crucible |  | Notes | |
+|  17 |  1   | Clumsy Crucible | ✔️ | Notes | |
 | [url](https://adventofcode.com/2023/day/17) | 2 | Title  |  | Notes | |
 |  18 |  1   | Lavaduct Lagoon | ✔️ | Folow the instructions and find the enclosed space (BFS) | |
 | [url](https://adventofcode.com/2023/day/18) | 2 | increase the spaces enough to make BFS non feasible  |  | Notes | |
