@@ -28,8 +28,8 @@ Solution for Advent of Code [2023](https://adventofcode.com/2023)
 | [url](https://adventofcode.com/2023/day/12) | 2 | What if the patterns are very long  |  | Notes | ✔️ |
 |  13 |  1   | Point of Incidence | ✔️ | Notes | |
 | [url](https://adventofcode.com/2023/day/13) | 2 | Title  |  | Notes | |
-|  14 |  1   | Parabolic Reflector Dish |  | Notes | |
-| [url](https://adventofcode.com/2023/day/14) | 2 | Title  |  | Notes | |
+|  14 |  1   | Parabolic Reflector Dish | ✔️ | Notes | |
+| [url](https://adventofcode.com/2023/day/14) | 2 | Title  | ✔️ | Notes | |
 |  15 |  1   | Lens Library | ✔️ | Write your own hash function | |
 | [url](https://adventofcode.com/2023/day/15) | 2 | Hash collisions  | ✔️ | how to handle hash collisions | |
 |  16 |  1   | The Floor Will Be Lava | ✔️ | Work out the beam path | |
