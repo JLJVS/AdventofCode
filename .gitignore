@@ -8,8 +8,10 @@
 /2021/data
 /2022/data
 /2023/data
+/2024/data
+/2025/data
 
-# jupyter ntoebooks
+# jupyter notebooks
 .ipynb_checkpoints
 
 # c++
