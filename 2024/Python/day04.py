@@ -176,7 +176,40 @@ def search_grid(grid: Grid) -> int:
             
     return matches
 
-@timeit
+def find_x_mas(grid) -> int:
+    '''
+    Finds two mas crossed and returns the number of matches
+
+    i.e. 
+    m _ s
+    _ a _
+    m _ s
+
+    Usage example:
+    >>> find_x_mas(convert_to_grid(read_input(test_path)))
+    9
+    '''
+
+    matches = 0
+    pattern_1 = "MSMS"
+    pattern_2 = "MMSS"
+    pattern_3 = "SMSM"
+    pattern_4 = "SSMM"
+    patterns = [pattern_1, pattern_2, pattern_3, pattern_4]
+    for coord in grid.keys():
+        if grid[coord] != "A":
+            continue
+        else:
+            diagonal_match = ""
+            x, y = coord
+            for pos in [(x-1, y-1), (x+1, y-1), (x-1, y+1), (x+1, y+1)]:
+                diagonal_match += grid.get(pos, "_")
+            if diagonal_match in patterns:
+                matches += 1
+            
+    return matches
+
+
 def part01(filepath):
     '''
     Finds the number of times XMAS appears.
@@ -193,4 +226,25 @@ def part01(filepath):
     print("Day 04 part 1:")
     print(f"XMAS appears {matches} times.")
 
-part01(filepath)
+def part02(filepath):
+    '''
+    Finds the number of times XMAS appears.
+
+    Usage example:
+    >>> part02(test_path)
+    Day 04 part 2:
+    Crossed MAS appears 9 times.
+    '''
+
+    lines = read_input(filepath)
+    grid = convert_to_grid(lines)
+    matches = find_x_mas(grid)
+    print("Day 04 part 2:")
+    print(f"Crossed MAS appears {matches} times.")
+
+@timeit
+def day04(filepath):
+    part01(filepath)
+    part02(filepath)
+
+day04(filepath)
