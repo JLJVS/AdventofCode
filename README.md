@@ -24,4 +24,7 @@ python -m doctest filename.py
 | [2021](https://adventofcode.com/2021) |        |      |     |       |
 | [2022](https://adventofcode.com/2022) | [50/50](https://github.com/JLJVS/AdventofCode/tree/main/2022/Python) |      |     |       |
 | [2023](https://adventofcode.com/2023) | [33/50](https://github.com/JLJVS/AdventofCode/tree/main/2023/Python) |      |     |       |
+| [2024](https://adventofcode.com/2024) | [0/50](https://github.com/JLJVS/AdventofCode/tree/main/2024/Python) |      |     |       |
+| [2025](https://adventofcode.com/2025) | [2/50](https://github.com/JLJVS/AdventofCode/tree/main/2025/Python) |      |     |       |
+
 
