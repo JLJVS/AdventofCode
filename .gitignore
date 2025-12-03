@@ -10,6 +10,7 @@
 /2023/data
 /2024/data
 /2025/data
+day*.txt
 
 # jupyter notebooks
 .ipynb_checkpoints
